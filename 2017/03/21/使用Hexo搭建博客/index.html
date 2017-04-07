@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用Hexo搭建博客 | Laomanco&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Hexo,博客," />
+  
+
+  <meta name="description" content="最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。 Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是b">
+<meta name="keywords" content="Hexo,博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Hexo搭建博客">
+<meta property="og:url" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/index.html">
+<meta property="og:site_name" content="Laomanco's Blog">
+<meta property="og:description" content="最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。 Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是b">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/hexo_xmind.png">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/hello_world.png">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/fisrt_blg.png">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/git_repo.png">
+<meta property="og:updated_time" content="2017-04-07T05:18:57.883Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Hexo搭建博客">
+<meta name="twitter:description" content="最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。 Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是b">
+<meta name="twitter:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/hexo_xmind.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=eaf5ab1e" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#如何搭建网站：使用Hexo"><span class="toc-number">1.</span> <span class="toc-text">如何搭建网站：使用Hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hexo环境配置"><span class="toc-number">1.1.</span> <span class="toc-text">Hexo环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新建一个Blog网站"><span class="toc-number">1.2.</span> <span class="toc-text">新建一个Blog网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进行本地测试"><span class="toc-number">1.3.</span> <span class="toc-text">进行本地测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#往Blog里面添加一篇新的文章"><span class="toc-number">1.4.</span> <span class="toc-text">往Blog里面添加一篇新的文章</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Host在哪里：Cloud-或者Git-Pages"><span class="toc-number">2.</span> <span class="toc-text">Host在哪里：Cloud 或者Git Pages</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Git-Pages"><span class="toc-number">2.1.</span> <span class="toc-text">Git Pages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git"><span class="toc-number">2.2.</span> <span class="toc-text">Git</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三方Cloud-Service"><span class="toc-number">2.3.</span> <span class="toc-text">第三方Cloud Service</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如何发布：deploy到git-repository"><span class="toc-number">3.</span> <span class="toc-text">如何发布：deploy到git repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#域名管理"><span class="toc-number">4.</span> <span class="toc-text">域名管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#购买域名"><span class="toc-number">4.1.</span> <span class="toc-text">购买域名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析绑定域名到自己的Service"><span class="toc-number">4.2.</span> <span class="toc-text">解析绑定域名到自己的Service</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码管理"><span class="toc-number">5.</span> <span class="toc-text">代码管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#新建一个Git-Repository或者-Branch"><span class="toc-number">5.1.</span> <span class="toc-text">新建一个Git Repository或者 Branch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Project-结构：-那些需要同步"><span class="toc-number">5.2.</span> <span class="toc-text">Project 结构： 那些需要同步</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一些扩展功能的介绍"><span class="toc-number">6.</span> <span class="toc-text">一些扩展功能的介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展功能：设置Blog的主题Theme"><span class="toc-number">6.1.</span> <span class="toc-text">扩展功能：设置Blog的主题Theme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展功能-Catalog-Tag"><span class="toc-number">6.2.</span> <span class="toc-text">扩展功能: Catalog/Tag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展功能：第三方Comments插件的使用"><span class="toc-number">6.3.</span> <span class="toc-text">扩展功能：第三方Comments插件的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#存在的问题"><span class="toc-number">7.</span> <span class="toc-text">存在的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Markdown语法高亮支持的语言列表"><span class="toc-number">7.1.</span> <span class="toc-text">Markdown语法高亮支持的语言列表</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Refrence"><span class="toc-number">8.</span> <span class="toc-text">Refrence</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-使用Hexo搭建博客" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">使用Hexo搭建博客</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.03.21</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Laomanco</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。</p>
+<p>Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是build成一个个的静态页面，而不是存在数据库里面动态加载。</p>
+<p><img src="/2017/03/21/使用Hexo搭建博客/hexo_xmind.png" alt=""></p>
+<p>上面这张图给出了利用Hexo搭建自己的博客所涉及到的几个方面, 归纳起来就是下面几个问题：</p>
+<blockquote>
+<p>(1). 如何搭建博客？<br>(2). Host在哪里？<br>(3). 怎么发布？<br>(4). 域名管理<br>(5). 代码管理 </p>
+</blockquote>
+<h1 id="如何搭建网站：使用Hexo"><a href="#如何搭建网站：使用Hexo" class="headerlink" title="如何搭建网站：使用Hexo"></a>如何搭建网站：使用Hexo</h1><p>使用Hexo来搭建一个博客系统，包含下面几个部分的工作：</p>
+<h2 id="Hexo环境配置"><a href="#Hexo环境配置" class="headerlink" title="Hexo环境配置"></a>Hexo环境配置</h2><p><a href="http://hexo.io/zh-cn/" target="_blank" rel="external">Hexo</a> 是基于Node.js的，安装好Node以后，直接通过npm就可以安装Hexo以及相关的扩展。然后因为是Hexo是通过Git来发布信息的，所以Git，以及Github（或者其他的替代产品，e.g.国内的BitBucket，CitCafe）的账号也是必须的。</p>
+<p>准备工作：<br><figure class="highlight crmsh"><table><tr><td class="code"><pre><div class="line">(<span class="number">1</span>). 安装<span class="keyword">Node</span><span class="title">，并通过npm</span>安装Hexo</div><div class="line">(<span class="number">2</span>). 安装Git并且注册GitHub账号</div></pre></td></tr></table></figure></p>
+<p><em>Note: 直到后面真正发布网站之前，Git其实是并不需要的，为了不引起一些不必要的疑惑，这里讲跳过Git相关的具体内容。</em></p>
+<p>Node 下载并安装好了以后，在命令行输入<br><figure class="highlight ada"><table><tr><td class="code"><pre><div class="line">$ npm <span class="comment">--version</span></div></pre></td></tr></table></figure></p>
+<p>测试一下 npm 是不是装好了（npm 是node 用来管理各种package的工具，类似于Visual Studio里面的nuget，关于npm包管理工具的详细信息，可以参考<a href="http://www.ruanyifeng.com/blog/2016/01/npm-install.html" target="_blank" rel="external">npm 模块安装机制简介</a>）。</p>
+<p>一切OK以后，然后就可以安装Hexo了。真正安装的时候，比想象中要简单得多的多，命令行里面输入下面的命令就搞定了：<br><figure class="highlight avrasm"><table><tr><td class="code"><pre><div class="line">$ npm install -g hexo-<span class="keyword">cli</span></div></pre></td></tr></table></figure></p>
+<p>安装好以后，输入<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>hexo</div></pre></td></tr></table></figure></p>
+<p>看是否出现Commands的提示，有就说明一切正常，可以进行下一步了</p>
+<h2 id="新建一个Blog网站"><a href="#新建一个Blog网站" class="headerlink" title="新建一个Blog网站"></a>新建一个Blog网站</h2><p>安装 Hexo 完成后，请执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>hexo init &lt;folder&gt;</div><div class="line"><span class="variable">$ </span>cd &lt;folder&gt;</div><div class="line"><span class="variable">$ </span>npm install</div></pre></td></tr></table></figure>
+<p>经过这三个简单的命令，一个Hex的博客网站就建成了。默认情况下，会安装一个landscape的主题，和一篇hello world的文章。</p>
+<h2 id="进行本地测试"><a href="#进行本地测试" class="headerlink" title="进行本地测试"></a>进行本地测试</h2><p>在命令行里面输入<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>hexo s</div></pre></td></tr></table></figure></p>
+<p>就可以启动一个本地的service<br><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ hexo s</div><div class="line">INFO  <span class="keyword">Start</span> processing</div><div class="line">INFO  Hexo <span class="keyword">is</span> running <span class="keyword">at</span> <span class="keyword">http</span>://localhost:<span class="number">4000</span>/. Press Ctrl+C <span class="keyword">to</span> stop.</div></pre></td></tr></table></figure></p>
+<p>在浏览器输入<a href="http://localhost:4000/" target="_blank" rel="external">localhost:4000</a> (4000是默认端口)就可以看到下面的网站首页了</p>
+<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/hello_world.png" width="80%" align="center"><br></div>
+
+<p>完成以后，会生成一个Hexo项目的文件夹，名字就是前面 <em>init</em> 命令参数里面的<em>folder</em>，各个文件夹的含义参考<a href="https://hexo.io/zh-cn/docs/setup.html" target="_blank" rel="external">官方网站说明</a>。</p>
+<h2 id="往Blog里面添加一篇新的文章"><a href="#往Blog里面添加一篇新的文章" class="headerlink" title="往Blog里面添加一篇新的文章"></a>往Blog里面添加一篇新的文章</h2><p>当测试环境调通以后，下面就尝试自己添加一篇blog文章吧，方法也是超级简单，只需要执行下面的命令就可以了<br><figure class="highlight gauss"><table><tr><td class="code"><pre><div class="line">$ hexo <span class="keyword">new</span> &lt;<span class="built_in">title</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>然后打开 <a href="">/source/_posts</a> 就会发现一个 <em>title.md</em> 命名的文件，例如我的title是MyFirstBlog,于是就是生产一个名为 MyFirstBlog.md 文件，还有一个同名文件夹用来存放一些图片之类的资源文件供文章引用。</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><div class="line"><span class="string">|--souce</span></div><div class="line">  <span class="string">|--_posts</span></div><div class="line">     <span class="string">|--MyFirstBlog</span></div><div class="line">     <span class="string">|--MyFirstBlog.md</span></div></pre></td></tr></table></figure>
+<p>打开 MyFirstBlog.md，可以看到如下的内容</p>
+<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/fisrt_blg.png" width="80%" align="center"><br></div>
+
+<p>文件最上方用 — 隔开的部分叫做 Front-matter，用来定义文件本身的一些属性，名字，日期什么的，还可以配置其他的Catagory,Tag之类的信息，具体内容可以参考 <a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="external">官方文档Front-matter</a> 章节。</p>
+<p>剩下的部分就是正文了，用 Markdown 写文章成了这几年的一种主流方式，个人感觉是一种非常简洁的方式，语法比较简单，解释转换出来的效果也很干净，看起来觉得很舒服，或者说很专业，有点早年用Latex写论文的感觉，但是要容易很多。关于 Markdown语法，网上有很多的资料介绍，搜索 <em>“为什么要用 Markdown 写文章”</em> 就会出来很多介绍文章，这里就不详细展开了。当然，任何事情都有两面性，Markdown 也有它不足的地方，比如图片的引用，<a href="https://sspai.com/post/37340" target="_blank" rel="external">反思Markdown：Markdown的长与短</a> 里面总结的很好，可以花几分钟时间看看。</p>
+<p>需要说明的是，用Markdown写文档，并不是像Word一样所见即所得的，所以需要有专门的编辑器来进行一定的解释转换，晚上工具很多，到底哪个好也是看个人喜好，尝试了好几种的工具以后，偶然发现我软的 VS Code 可以支持 Markdown，个人就深深的喜欢上了。</p>
+<p>到这里为止，我们已经能够完整的在本地用Hexo搭建一个自己的博客了，Hexo还有很多其他的扩展功能，比如说<br><figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">-设置Blog的主题</span></div><div class="line">-<span class="ruby">-启用Catalog/Tag</span></div><div class="line">-<span class="ruby">-添加第三方Comments插件</span></div></pre></td></tr></table></figure></p>
+<p>为了不会因为走的太远而打断思路，这些扩展功能将放在后面进行介绍。在完成了本地环境的搭建以后，我们接下来要做的，是将这个Blog搬到真正可以puglic访问的网络上。</p>
+<h1 id="Host在哪里：Cloud-或者Git-Pages"><a href="#Host在哪里：Cloud-或者Git-Pages" class="headerlink" title="Host在哪里：Cloud 或者Git Pages"></a>Host在哪里：Cloud 或者Git Pages</h1><h2 id="Git-Pages"><a href="#Git-Pages" class="headerlink" title="Git Pages"></a>Git Pages</h2><h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>如何注册GitHub以及建立Repository,可以参考 <a href="http://www.jianshu.com/p/e99ed60390a8" target="_blank" rel="external">20分钟教你使用hexo搭建github博客</a>,。</p>
+<p>在最开是的需求里面，Git 是用来将生成的静态网站内容同步到GitHib上去的, 所以这里需要注册GitHub账号并且下载客户端, 实际上, 我们最会用到两个Git Repository, 一个用来上传Build出来的静态网站, 另外一个这是用来管理我们自己整个Hexo的project, 以便于我们可以随时的在不同的电脑上面进行修改. 其中的关系可以用下面的图来表示：</p>
+<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/git_repo.png" width="80%" align="center"><br></div>
+
+<p>需要注意的是，在create repository的时候，名字必须是{username}.github.io, 也就是GitHub默认分配给你账号的域名。详细原因在后面讲Deploy的章节来解释</p>
+<h2 id="第三方Cloud-Service"><a href="#第三方Cloud-Service" class="headerlink" title="第三方Cloud Service"></a>第三方Cloud Service</h2><h1 id="如何发布：deploy到git-repository"><a href="#如何发布：deploy到git-repository" class="headerlink" title="如何发布：deploy到git repository"></a>如何发布：deploy到git repository</h1><h1 id="域名管理"><a href="#域名管理" class="headerlink" title="域名管理"></a>域名管理</h1><h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><h2 id="解析绑定域名到自己的Service"><a href="#解析绑定域名到自己的Service" class="headerlink" title="解析绑定域名到自己的Service"></a>解析绑定域名到自己的Service</h2><h1 id="代码管理"><a href="#代码管理" class="headerlink" title="代码管理"></a>代码管理</h1><h2 id="新建一个Git-Repository或者-Branch"><a href="#新建一个Git-Repository或者-Branch" class="headerlink" title="新建一个Git Repository或者 Branch"></a>新建一个Git Repository或者 Branch</h2><h2 id="Project-结构：-那些需要同步"><a href="#Project-结构：-那些需要同步" class="headerlink" title="Project 结构： 那些需要同步"></a>Project 结构： 那些需要同步</h2><h1 id="一些扩展功能的介绍"><a href="#一些扩展功能的介绍" class="headerlink" title="一些扩展功能的介绍"></a>一些扩展功能的介绍</h1><h2 id="扩展功能：设置Blog的主题Theme"><a href="#扩展功能：设置Blog的主题Theme" class="headerlink" title="扩展功能：设置Blog的主题Theme"></a>扩展功能：设置Blog的主题Theme</h2><h2 id="扩展功能-Catalog-Tag"><a href="#扩展功能-Catalog-Tag" class="headerlink" title="扩展功能: Catalog/Tag"></a>扩展功能: Catalog/Tag</h2><h2 id="扩展功能：第三方Comments插件的使用"><a href="#扩展功能：第三方Comments插件的使用" class="headerlink" title="扩展功能：第三方Comments插件的使用"></a>扩展功能：第三方Comments插件的使用</h2><h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><h2 id="Markdown语法高亮支持的语言列表"><a href="#Markdown语法高亮支持的语言列表" class="headerlink" title="Markdown语法高亮支持的语言列表"></a>Markdown语法高亮支持的语言列表</h2><p>Markdown可以在引用的 block 里面指定代码 highlight 时候使用的语言，<br><figure class="highlight csharp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// begin code block with " ```csharp " to specify language as C#</span></div><div class="line"><span class="keyword">using</span> System;</div><div class="line"></div><div class="line"><span class="keyword">namespace</span> <span class="title">Demo</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DemoClass</span>: <span class="title">IHighlight</span></div><div class="line">  &#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">string</span> _language;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">GetLanguage</span>(<span class="params"></span>)</span></div><div class="line">    &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>._language;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="comment">// end code block with " ``` "</span></div></pre></td></tr></table></figure></p>
+<p>支持的全部语言列表参见 [Syntax highlighting in markdown] (<a href="https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown" target="_blank" rel="external">https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown</a>)</p>
+<h1 id="Refrence"><a href="#Refrence" class="headerlink" title="Refrence"></a>Refrence</h1><p><a href="http://www.ruanyifeng.com/blog/2016/01/npm-install.html" target="_blank" rel="external">npm 模块安装机制简介</a><br><a href="https://hexo.io/zh-cn/" target="_blank" rel="external">Hexo官方网站</a><br><a href="https://markdown-zh.readthedocs.io/en/latest/blockelements/" target="_blank" rel="external">Markdown 中文文档</a><br><a href="https://wizardforcel.gitbooks.io/markdown-simple-world/content/" target="_blank" rel="external">Markdown 简单的世界</a><br><a href="http://www.xmind.net/" target="_blank" rel="external">Xmind 官方网站</a><br><a href="https://blog.coding.net/blog/coding-mindmap" target="_blank" rel="external">让思路更清晰——我是怎样使用思维导图的</a><br><a href="https://sspai.com/post/36275" target="_blank" rel="external">iPic + Typora，方便快捷地在 Markdown 中插图</a><br><a href="http://www.jianshu.com/p/9be87e7e15bf" target="_blank" rel="external">如何在 Markdown 注释一段文字</a><br><a href="http://www.jianshu.com/p/9d94660a96f1" target="_blank" rel="external">MarkDown使用小技巧</a><br><a href="https://typora.io/" target="_blank" rel="external">MarkDown编辑器 Typora</a><br><a href="https://sspai.com/post/37340" target="_blank" rel="external">反思Markdown：Markdown的长与短</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+
+
+
+    
+
+	<hr />
+	<div id="hypercomments_widget"></div>
+	<script type="text/javascript">
+	_hcwp = window._hcwp || [];
+
+	_hcwp.push({widget:"Stream", widget_id: '88547'});
+
+	(function() {
+
+	if("HC_LOAD_INIT" in window) return;
+
+	HC_LOAD_INIT = true;
+
+	var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+
+	var hcc = document.createElement("script"); 
+	hcc.type = "text/javascript"; 
+	hcc.async = true;
+	hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/"+'88547' +"/"+lang+"/widget.js";
+
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(hcc, s.nextSibling);
+	})();
+
+	</script>
+
+	<a href="http://hypercomments.com" class="hc-link" title="comments widget">Powered by HyperComments</a>
+
+
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

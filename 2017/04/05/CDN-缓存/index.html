@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>CDN 缓存 | Laomanco&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="CDN,缓存," />
+  
+
+  <meta name="description" content="在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。 -- CDN 是什么？-- CDN 有什么作用？-- CDN 怎么用？-- CDN 的原理是什么？ CDN 概述下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一些">
+<meta name="keywords" content="CDN,缓存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CDN 缓存">
+<meta property="og:url" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/index.html">
+<meta property="og:site_name" content="Laomanco's Blog">
+<meta property="og:description" content="在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。 -- CDN 是什么？-- CDN 有什么作用？-- CDN 怎么用？-- CDN 的原理是什么？ CDN 概述下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一些">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn_knowledge_map.svg">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn.png">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn_principle.png">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/domain_cname.png">
+<meta property="og:updated_time" content="2017-04-07T10:21:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CDN 缓存">
+<meta name="twitter:description" content="在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。 -- CDN 是什么？-- CDN 有什么作用？-- CDN 怎么用？-- CDN 的原理是什么？ CDN 概述下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一些">
+<meta name="twitter:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn_knowledge_map.svg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=eaf5ab1e" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CDN-概述"><span class="toc-number">1.</span> <span class="toc-text">CDN 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是CDN"><span class="toc-number">1.1.</span> <span class="toc-text">什么是CDN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CDN的作用"><span class="toc-number">1.2.</span> <span class="toc-text">CDN的作用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CDN的结构和原理"><span class="toc-number">2.</span> <span class="toc-text">CDN的结构和原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CDN的基本结构"><span class="toc-number">2.1.</span> <span class="toc-text">CDN的基本结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存"><span class="toc-number">2.2.</span> <span class="toc-text">缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CDN-缓存哪些内容-（应用场景）"><span class="toc-number">2.2.1.</span> <span class="toc-text">CDN 缓存哪些内容 （应用场景）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CDN-缓存规则（失效与更新）"><span class="toc-number">2.2.2.</span> <span class="toc-text">CDN 缓存规则（失效与更新）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS"><span class="toc-number">2.3.</span> <span class="toc-text">DNS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CNAME"><span class="toc-number">2.3.1.</span> <span class="toc-text">CNAME</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#是否启动CDN访问过程对比"><span class="toc-number">2.3.2.</span> <span class="toc-text">是否启动CDN访问过程对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CDN-的调度算法"><span class="toc-number">2.3.3.</span> <span class="toc-text">CDN 的调度算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全防御"><span class="toc-number">2.3.4.</span> <span class="toc-text">安全防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTPS-支持"><span class="toc-number">2.4.</span> <span class="toc-text">HTTPS 支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他问题"><span class="toc-number">2.5.</span> <span class="toc-text">其他问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">3.</span> <span class="toc-text">Reference</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-CDN-缓存" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CDN 缓存</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.04.05</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Laomanco</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">- CDN 是什么？</span></div><div class="line">-<span class="ruby">- CDN 有什么作用？</span></div><div class="line">-<span class="ruby">- CDN 怎么用？</span></div><div class="line">-<span class="ruby">- CDN 的原理是什么？</span></div></pre></td></tr></table></figure>
+<h1 id="CDN-概述"><a href="#CDN-概述" class="headerlink" title="CDN 概述"></a>CDN 概述</h1><p>下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一些相关的扩展问题进行介绍。写几十博客的时候，使用Xmind之类的思维导图软件整理知识点是一种非常好的方法，通过这种层次性的关系，能够帮你理清楚思路。</p>
+<p><img src="/2017/04/05/CDN-缓存/cdn_knowledge_map.svg" alt=""></p>
+<h2 id="什么是CDN"><a href="#什么是CDN" class="headerlink" title="什么是CDN"></a>什么是CDN</h2><p>CDN 的全称是 Content Delivery Network， 内容分发网络，是一种通过缓存服务器进行网站加速的方式。</p>
+<p>CDN 解决的，是在复杂的网络情况下，很多地方用户访问网站速度慢的问题，其原理是在不同的地方建立缓存服务器，让用户就近访问。图片来源<a href="http://www.cdncoupon.com/maxcdn-coupon/" target="_blank" rel="external">MaxCDN Coupon</a></p>
+<div align="center"><br><img src="/2017/04/05/CDN-缓存/cdn.png" width="80%" align="center"><br></div>
+
+<p>比如说，国内的宽带运营商有电信，网通，移动，长城等等，还有教育网，这些网络自己相互访问是很慢的，假如我是一个电信的用户，你的网站托管在了网通的机房里面，要直接访问网站，肯定慢得要死，但是如果把这个网站的内容在一个电信的服务器上面缓存起来，那么访问的时候，就不需要跨界到网通的线路上了，速度也自然会快起来。</p>
+<h2 id="CDN的作用"><a href="#CDN的作用" class="headerlink" title="CDN的作用"></a>CDN的作用</h2><p>CDN的主要作用当然是缓存内容，增加用户访问网站的速度。在缓存用户的同时，CDN同时还在用户跟源站服务器之间建立了一道屏障，于是CDN同时还具有了降低源站访问压力和安全防护上面的作用，总结起来就是</p>
+<blockquote>
+<ul>
+<li><strong>加速：</strong> 通过缓存数据，增加用户访问网站的速度</li>
+<li><strong>减低源站压力：</strong> 因为很多的内容都直接从CDN的缓存服务器上面得到，所以源站服务器的压力就降低了</li>
+<li><strong>访问控制：</strong> CDN还可以提供防盗链一类的作用，对资源的访问进行控制</li>
+<li><strong>安全防御：</strong> 启用了CDN 以后，源站的IP是被隐藏的，所以通过域名进行的攻击都会被挡在CDN服务器上面，作为专业的解决方案供应商，CDN 服务器在安全防御上面比一般的网站会做的更好</li>
+</ul>
+</blockquote>
+<p>关于第二点减轻源站压力，如果CDN的回源算法不合理，比如说几个CDN节点同时从源站拉取缓存的数据，同样也会对源站服务器造成很大的压力。</p>
+<h1 id="CDN的结构和原理"><a href="#CDN的结构和原理" class="headerlink" title="CDN的结构和原理"></a>CDN的结构和原理</h1><h2 id="CDN的基本结构"><a href="#CDN的基本结构" class="headerlink" title="CDN的基本结构"></a>CDN的基本结构</h2><p>一个CDN加速系统要运行起来，包含三个基本的部分</p>
+<blockquote>
+<ul>
+<li><strong>源站：</strong> 这个是用户想想要访问的网站，是所有内容的来源</li>
+<li><strong>CDN缓存服务器：</strong> CDN将源站的内容缓存到某些服务器，这些服务器可能在不同的地方将相同的数据缓存多份，然后通过一些调度算法，将用户的请求引导到最快的一个。</li>
+<li><strong>DNS：</strong> 当用户输入一个网址进行访问的时候，最终被发送到哪个ip地址，是由DNS决定的，CDN通过设置CNAME的方式，将用户的请求从源站转移到CDN的服务器的。</li>
+</ul>
+</blockquote>
+<p>下面这张图表明了CDN 的基本流程和原理，图片来自<a href="https://docs.qingcloud.com/guide/cdn.html" target="_blank" rel="external">青云</a></p>
+<div align="center"><br><img src="/2017/04/05/CDN-缓存/cdn_principle.png" width="80%" align="center"><br></div>
+
+<p>深入到CDN的实现，其内部也是一套web service的系统，会有load balance，分层系统，存储，调度算法等等，可以参考<a href="http://peiqiang.net/pictures/aliyun/阿里CDN技术揭秘.pdf" target="_blank" rel="external">阿里云的实现</a></p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p>CDN 最主要的作用是对网站的内容进行缓存，那么对应的就有两个问题</p>
+<blockquote>
+<ul>
+<li>CDN缓存哪些内容？全部还是部分？</li>
+<li>这些缓存数据的有效期是怎么样的，如何更新呢？</li>
+</ul>
+</blockquote>
+<h3 id="CDN-缓存哪些内容-（应用场景）"><a href="#CDN-缓存哪些内容-（应用场景）" class="headerlink" title="CDN 缓存哪些内容 （应用场景）"></a>CDN 缓存哪些内容 （应用场景）</h3><p>既然是作为缓存的内容，那应该是可以重复访问的内容，这样缓存才有意义，如果每次访问得到的结果都不一样，那么CDN服务器还是需要访问源站, 那缓存的功能就失效了。另外一类就是访问频率比较高的热点资源，比如说新推出的App游戏更新，社交网络的热门图片。</p>
+<p>所以通常情况下，CDN 说缓存的，是 <strong>静态</strong> 的内容，比如说网站的html/css/js文件，图片，音频，视频等等。随便打开一个CDN供应商的网站，在业务类型里面，就可以看到CDN支持的应用场景了。比如说<a href="https://www.azure.cn/documentation/articles/cdn-overview/" target="_blank" rel="external">Azure CDN</a>就提供下面的业务类型。</p>
+<blockquote>
+<ul>
+<li><strong>网站、小文件加速:</strong> html网页文件，图片文件，JavaScript，CSS文件等</li>
+<li><strong>大文件下载分发:</strong> 典型的用户场景如操作系统固件升级，手机APP更新等</li>
+<li><strong>流媒体加速:</strong> 各类媒体网站，手机APP客户端</li>
+<li><strong>HTTPS安全加速:</strong> 针对HTTPS协议的缓存加速服务，需要域名对应的certificate</li>
+</ul>
+</blockquote>
+<h3 id="CDN-缓存规则（失效与更新）"><a href="#CDN-缓存规则（失效与更新）" class="headerlink" title="CDN 缓存规则（失效与更新）"></a>CDN 缓存规则（失效与更新）</h3><p>有缓存就有有效期和更新时间的问题，对CDN来说，通常采取下面的方法进行处理</p>
+<blockquote>
+<p><strong>Pull:</strong> 为缓存内容设置最大有效期，有效期到了以后自动去pull数据更新<br><strong>Push:</strong> 后台控制，手动更新缓存</p>
+</blockquote>
+<p>CDN 节点访问源站点过程，就叫做回源，前面在讲CDN的作用的时候提到过，如果CDN的回源算法不合理，也会对源站服务器造成很大的压力。</p>
+<h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><h3 id="CNAME"><a href="#CNAME" class="headerlink" title="CNAME"></a>CNAME</h3><p>用户访问一个网站的时候，最主要的两步就是</p>
+<blockquote>
+<ol>
+<li>输入网址，DNS 服务器解析网址并转换成IP, 在通过路由寻址找到IP所在的服务器</li>
+<li>通过特定的端口(http的80端口或者https的443端口)访问服务器上的内容</li>
+</ol>
+</blockquote>
+<p>在正常的情况下，NDS根据域名解析出来的IP地址，都是源站服务器的ip，如何让DNS将用户引导到CDN服务器上呢？方法就是使用<a href="https://en.wikipedia.org/wiki/CNAME_record" target="_blank" rel="external">CNAME</a>, 通常情况下，DNS解析会有两种类型，一个是AName, 对应的是服务器的 ip 地址， CNAME则是别名，可以对应到另外一个域名，通过CNAME就可以将源站的流量引导到CND服务器上面了。下面是在阿里云万网申请域名以后，添加解析的页面。</p>
+<div align="center"><br><img src="/2017/04/05/CDN-缓存/domain_cname.png" width="90%" align="center"><br></div>
+
+<h3 id="是否启动CDN访问过程对比"><a href="#是否启动CDN访问过程对比" class="headerlink" title="是否启动CDN访问过程对比"></a>是否启动CDN访问过程对比</h3><h3 id="CDN-的调度算法"><a href="#CDN-的调度算法" class="headerlink" title="CDN 的调度算法"></a>CDN 的调度算法</h3><h3 id="安全防御"><a href="#安全防御" class="headerlink" title="安全防御"></a>安全防御</h3><h2 id="HTTPS-支持"><a href="#HTTPS-支持" class="headerlink" title="HTTPS 支持"></a>HTTPS 支持</h2><p>随着网络的发展，安全问题也越来越受到重视，所以越来越多的网站都开始使用全站Https， 比如google，Amazon。<br>使用给网络带来了安全，但是对于传统的CDN业务却带来了新的新的问题。</p>
+<p>Htpps的安全性来自于两个方面：</p>
+<blockquote>
+<ol>
+<li>内容是加密过的</li>
+<li>浏览器会验证服务器证书，要求证书是有效的（Trusted CA）, 并且是颁发给要访问的域名</li>
+</ol>
+</blockquote>
+<p>于是对于启用了https的网站来说，当NDS将用户Route到CDN缓存服务器的时候，就会出现安全的问题了。<br>现在的解决方法是，将用户的域名证书上传到CDN供应商，这样CDN就可以用证书的私钥和用户建立https连接了。阿里CDN在<a href="https://help.aliyun.com/document_detail/27118.html?spm=5176.doc27141.6.570.yxBd0i" target="_blank" rel="external">启用Https 协议下的CDN的时候，就需要用户提供源站的证书和私钥</a>。</p>
+<p>在建立了用户到CDN之间的连接以后，还有一个问题，就是回源的时候，CDN服务器跟源站之间的通信，理论上，用户到CDN跟CDN到源站是两个独立的过程，可以使用不同的协议和不同的证书，但是为了减少对源站的影响（是否启用CDN一样），应该是在两段通路上，都使用相同的https cert。</p>
+<p>关于HTTPS 加速的详细分析，可以参考<a href="https://www.incapsula.com/cdn-guide/cdn-and-ssl-tls.html?winzoom=1" target="_blank" rel="external">CDN and SSL/TSL</a></p>
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>在了解了CDN的原理和作用以后，整理一下思路，想想下面几个问题</p>
+<ol>
+<li>一直在讲CDN，那么给我一个网站，我怎么知道是否启用了CDN呢？ <figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">启用CDN的目的，是在不同的地方对数据进行多份缓存，加速访问，所以启用了CDN 的网站，从不同的地方去ping的话，会得到不同的 ip， 通过这个条件，就可以判断一个网站是否启用了CDN了。但是一般情况下，个人访问的接入点是不会变的，没办法做到从不同的地方去ping，好在有一些第三方的工具可以帮助我们做到这一点，比如[<span class="string">站长工具Ping</span>](<span class="link">http://tool.chinaz.com/</span>)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://www.qcloud.com/document/product/228/3236" target="_blank" rel="external">CDN缓存那些事</a><br><a href="http://peiqiang.net/pictures/aliyun/阿里CDN技术揭秘.pdf" target="_blank" rel="external">阿里CDN技术揭秘</a><br><a href="http://liaoph.com/openssl-san/" target="_blank" rel="external">OpenSSL SAN 证书</a><br><a href="https://kangzubin.com/certificate-format/" target="_blank" rel="external">SSL 数字证书的标准、编码以及文件扩展名</a><br><a href="https://www.incapsula.com/cdn-guide/cdn-and-ssl-tls.html?winzoom=1" target="_blank" rel="external">CDN and SSL/TSL</a><br><a href="http://storysky.blog.51cto.com/628458/283145/" target="_blank" rel="external">别让CDN的回源把你的服务器拖垮，采用正确的回源策略</a></p>
+
+    
+  </div>
+</article>
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+
+
+
+    
+
+	<hr />
+	<div id="hypercomments_widget"></div>
+	<script type="text/javascript">
+	_hcwp = window._hcwp || [];
+
+	_hcwp.push({widget:"Stream", widget_id: '88547'});
+
+	(function() {
+
+	if("HC_LOAD_INIT" in window) return;
+
+	HC_LOAD_INIT = true;
+
+	var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+
+	var hcc = document.createElement("script"); 
+	hcc.type = "text/javascript"; 
+	hcc.async = true;
+	hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/"+'88547' +"/"+lang+"/widget.js";
+
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(hcc, s.nextSibling);
+	})();
+
+	</script>
+
+	<a href="http://hypercomments.com" class="hc-link" title="comments widget">Powered by HyperComments</a>
+
+
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

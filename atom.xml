@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Laomanco&#39;s Blog</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://xiaolianghuang.github.io/"/>
+  <updated>2017-04-07T10:21:52.000Z</updated>
+  <id>http://xiaolianghuang.github.io/</id>
+  
+  <author>
+    <name>Laomanco</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CDN 缓存</title>
+    <link href="http://xiaolianghuang.github.io/2017/04/05/CDN-%E7%BC%93%E5%AD%98/"/>
+    <id>http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/</id>
+    <published>2017-04-05T02:53:22.000Z</published>
+    <updated>2017-04-07T10:21:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">- CDN 是什么？</span></div><div class="line">-<span class="ruby">- CDN 有什么作用？</span></div><div class="line">-<span class="ruby">- CDN 怎么用？</span></div><div class="line">-<span class="ruby">- CDN 的原理是什么？</span></div></pre></td></tr></table></figure>
+<h1 id="CDN-概述"><a href="#CDN-概述" class="headerlink" title="CDN 概述"></a>CDN 概述</h1><p>下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一些相关的扩展问题进行介绍。写几十博客的时候，使用Xmind之类的思维导图软件整理知识点是一种非常好的方法，通过这种层次性的关系，能够帮你理清楚思路。</p>
+<p><img src="/2017/04/05/CDN-缓存/cdn_knowledge_map.svg" alt=""></p>
+<h2 id="什么是CDN"><a href="#什么是CDN" class="headerlink" title="什么是CDN"></a>什么是CDN</h2><p>CDN 的全称是 Content Delivery Network， 内容分发网络，是一种通过缓存服务器进行网站加速的方式。</p>
+<p>CDN 解决的，是在复杂的网络情况下，很多地方用户访问网站速度慢的问题，其原理是在不同的地方建立缓存服务器，让用户就近访问。图片来源<a href="http://www.cdncoupon.com/maxcdn-coupon/" target="_blank" rel="external">MaxCDN Coupon</a></p>
+<div align="center"><br><img src="/2017/04/05/CDN-缓存/cdn.png" width="80%" align="center"><br></div>
+
+<p>比如说，国内的宽带运营商有电信，网通，移动，长城等等，还有教育网，这些网络自己相互访问是很慢的，假如我是一个电信的用户，你的网站托管在了网通的机房里面，要直接访问网站，肯定慢得要死，但是如果把这个网站的内容在一个电信的服务器上面缓存起来，那么访问的时候，就不需要跨界到网通的线路上了，速度也自然会快起来。</p>
+<h2 id="CDN的作用"><a href="#CDN的作用" class="headerlink" title="CDN的作用"></a>CDN的作用</h2><p>CDN的主要作用当然是缓存内容，增加用户访问网站的速度。在缓存用户的同时，CDN同时还在用户跟源站服务器之间建立了一道屏障，于是CDN同时还具有了降低源站访问压力和安全防护上面的作用，总结起来就是</p>
+<blockquote>
+<ul>
+<li><strong>加速：</strong> 通过缓存数据，增加用户访问网站的速度</li>
+<li><strong>减低源站压力：</strong> 因为很多的内容都直接从CDN的缓存服务器上面得到，所以源站服务器的压力就降低了</li>
+<li><strong>访问控制：</strong> CDN还可以提供防盗链一类的作用，对资源的访问进行控制</li>
+<li><strong>安全防御：</strong> 启用了CDN 以后，源站的IP是被隐藏的，所以通过域名进行的攻击都会被挡在CDN服务器上面，作为专业的解决方案供应商，CDN 服务器在安全防御上面比一般的网站会做的更好</li>
+</ul>
+</blockquote>
+<p>关于第二点减轻源站压力，如果CDN的回源算法不合理，比如说几个CDN节点同时从源站拉取缓存的数据，同样也会对源站服务器造成很大的压力。</p>
+<h1 id="CDN的结构和原理"><a href="#CDN的结构和原理" class="headerlink" title="CDN的结构和原理"></a>CDN的结构和原理</h1><h2 id="CDN的基本结构"><a href="#CDN的基本结构" class="headerlink" title="CDN的基本结构"></a>CDN的基本结构</h2><p>一个CDN加速系统要运行起来，包含三个基本的部分</p>
+<blockquote>
+<ul>
+<li><strong>源站：</strong> 这个是用户想想要访问的网站，是所有内容的来源</li>
+<li><strong>CDN缓存服务器：</strong> CDN将源站的内容缓存到某些服务器，这些服务器可能在不同的地方将相同的数据缓存多份，然后通过一些调度算法，将用户的请求引导到最快的一个。</li>
+<li><strong>DNS：</strong> 当用户输入一个网址进行访问的时候，最终被发送到哪个ip地址，是由DNS决定的，CDN通过设置CNAME的方式，将用户的请求从源站转移到CDN的服务器的。</li>
+</ul>
+</blockquote>
+<p>下面这张图表明了CDN 的基本流程和原理，图片来自<a href="https://docs.qingcloud.com/guide/cdn.html" target="_blank" rel="external">青云</a></p>
+<div align="center"><br><img src="/2017/04/05/CDN-缓存/cdn_principle.png" width="80%" align="center"><br></div>
+
+<p>深入到CDN的实现，其内部也是一套web service的系统，会有load balance，分层系统，存储，调度算法等等，可以参考<a href="http://peiqiang.net/pictures/aliyun/阿里CDN技术揭秘.pdf" target="_blank" rel="external">阿里云的实现</a></p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p>CDN 最主要的作用是对网站的内容进行缓存，那么对应的就有两个问题</p>
+<blockquote>
+<ul>
+<li>CDN缓存哪些内容？全部还是部分？</li>
+<li>这些缓存数据的有效期是怎么样的，如何更新呢？</li>
+</ul>
+</blockquote>
+<h3 id="CDN-缓存哪些内容-（应用场景）"><a href="#CDN-缓存哪些内容-（应用场景）" class="headerlink" title="CDN 缓存哪些内容 （应用场景）"></a>CDN 缓存哪些内容 （应用场景）</h3><p>既然是作为缓存的内容，那应该是可以重复访问的内容，这样缓存才有意义，如果每次访问得到的结果都不一样，那么CDN服务器还是需要访问源站, 那缓存的功能就失效了。另外一类就是访问频率比较高的热点资源，比如说新推出的App游戏更新，社交网络的热门图片。</p>
+<p>所以通常情况下，CDN 说缓存的，是 <strong>静态</strong> 的内容，比如说网站的html/css/js文件，图片，音频，视频等等。随便打开一个CDN供应商的网站，在业务类型里面，就可以看到CDN支持的应用场景了。比如说<a href="https://www.azure.cn/documentation/articles/cdn-overview/" target="_blank" rel="external">Azure CDN</a>就提供下面的业务类型。</p>
+<blockquote>
+<ul>
+<li><strong>网站、小文件加速:</strong> html网页文件，图片文件，JavaScript，CSS文件等</li>
+<li><strong>大文件下载分发:</strong> 典型的用户场景如操作系统固件升级，手机APP更新等</li>
+<li><strong>流媒体加速:</strong> 各类媒体网站，手机APP客户端</li>
+<li><strong>HTTPS安全加速:</strong> 针对HTTPS协议的缓存加速服务，需要域名对应的certificate</li>
+</ul>
+</blockquote>
+<h3 id="CDN-缓存规则（失效与更新）"><a href="#CDN-缓存规则（失效与更新）" class="headerlink" title="CDN 缓存规则（失效与更新）"></a>CDN 缓存规则（失效与更新）</h3><p>有缓存就有有效期和更新时间的问题，对CDN来说，通常采取下面的方法进行处理</p>
+<blockquote>
+<p><strong>Pull:</strong> 为缓存内容设置最大有效期，有效期到了以后自动去pull数据更新<br><strong>Push:</strong> 后台控制，手动更新缓存</p>
+</blockquote>
+<p>CDN 节点访问源站点过程，就叫做回源，前面在讲CDN的作用的时候提到过，如果CDN的回源算法不合理，也会对源站服务器造成很大的压力。</p>
+<h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><h3 id="CNAME"><a href="#CNAME" class="headerlink" title="CNAME"></a>CNAME</h3><p>用户访问一个网站的时候，最主要的两步就是</p>
+<blockquote>
+<ol>
+<li>输入网址，DNS 服务器解析网址并转换成IP, 在通过路由寻址找到IP所在的服务器</li>
+<li>通过特定的端口(http的80端口或者https的443端口)访问服务器上的内容</li>
+</ol>
+</blockquote>
+<p>在正常的情况下，NDS根据域名解析出来的IP地址，都是源站服务器的ip，如何让DNS将用户引导到CDN服务器上呢？方法就是使用<a href="https://en.wikipedia.org/wiki/CNAME_record" target="_blank" rel="external">CNAME</a>, 通常情况下，DNS解析会有两种类型，一个是AName, 对应的是服务器的 ip 地址， CNAME则是别名，可以对应到另外一个域名，通过CNAME就可以将源站的流量引导到CND服务器上面了。下面是在阿里云万网申请域名以后，添加解析的页面。</p>
+<div align="center"><br><img src="/2017/04/05/CDN-缓存/domain_cname.png" width="90%" align="center"><br></div>
+
+<h3 id="是否启动CDN访问过程对比"><a href="#是否启动CDN访问过程对比" class="headerlink" title="是否启动CDN访问过程对比"></a>是否启动CDN访问过程对比</h3><h3 id="CDN-的调度算法"><a href="#CDN-的调度算法" class="headerlink" title="CDN 的调度算法"></a>CDN 的调度算法</h3><h3 id="安全防御"><a href="#安全防御" class="headerlink" title="安全防御"></a>安全防御</h3><h2 id="HTTPS-支持"><a href="#HTTPS-支持" class="headerlink" title="HTTPS 支持"></a>HTTPS 支持</h2><p>随着网络的发展，安全问题也越来越受到重视，所以越来越多的网站都开始使用全站Https， 比如google，Amazon。<br>使用给网络带来了安全，但是对于传统的CDN业务却带来了新的新的问题。</p>
+<p>Htpps的安全性来自于两个方面：</p>
+<blockquote>
+<ol>
+<li>内容是加密过的</li>
+<li>浏览器会验证服务器证书，要求证书是有效的（Trusted CA）, 并且是颁发给要访问的域名</li>
+</ol>
+</blockquote>
+<p>于是对于启用了https的网站来说，当NDS将用户Route到CDN缓存服务器的时候，就会出现安全的问题了。<br>现在的解决方法是，将用户的域名证书上传到CDN供应商，这样CDN就可以用证书的私钥和用户建立https连接了。阿里CDN在<a href="https://help.aliyun.com/document_detail/27118.html?spm=5176.doc27141.6.570.yxBd0i" target="_blank" rel="external">启用Https 协议下的CDN的时候，就需要用户提供源站的证书和私钥</a>。</p>
+<p>在建立了用户到CDN之间的连接以后，还有一个问题，就是回源的时候，CDN服务器跟源站之间的通信，理论上，用户到CDN跟CDN到源站是两个独立的过程，可以使用不同的协议和不同的证书，但是为了减少对源站的影响（是否启用CDN一样），应该是在两段通路上，都使用相同的https cert。</p>
+<p>关于HTTPS 加速的详细分析，可以参考<a href="https://www.incapsula.com/cdn-guide/cdn-and-ssl-tls.html?winzoom=1" target="_blank" rel="external">CDN and SSL/TSL</a></p>
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>在了解了CDN的原理和作用以后，整理一下思路，想想下面几个问题</p>
+<ol>
+<li>一直在讲CDN，那么给我一个网站，我怎么知道是否启用了CDN呢？ <figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">启用CDN的目的，是在不同的地方对数据进行多份缓存，加速访问，所以启用了CDN 的网站，从不同的地方去ping的话，会得到不同的 ip， 通过这个条件，就可以判断一个网站是否启用了CDN了。但是一般情况下，个人访问的接入点是不会变的，没办法做到从不同的地方去ping，好在有一些第三方的工具可以帮助我们做到这一点，比如[<span class="string">站长工具Ping</span>](<span class="link">http://tool.chinaz.com/</span>)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://www.qcloud.com/document/product/228/3236" target="_blank" rel="external">CDN缓存那些事</a><br><a href="http://peiqiang.net/pictures/aliyun/阿里CDN技术揭秘.pdf" target="_blank" rel="external">阿里CDN技术揭秘</a><br><a href="http://liaoph.com/openssl-san/" target="_blank" rel="external">OpenSSL SAN 证书</a><br><a href="https://kangzubin.com/certificate-format/" target="_blank" rel="external">SSL 数字证书的标准、编码以及文件扩展名</a><br><a href="https://www.incapsula.com/cdn-guide/cdn-and-ssl-tls.html?winzoom=1" target="_blank" rel="external">CDN and SSL/TSL</a><br><a href="http://storysky.blog.51cto.com/628458/283145/" target="_blank" rel="external">别让CDN的回源把你的服务器拖垮，采用正确的回源策略</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。&lt;/p&gt;
+&lt;figure class=&quot;highlight haml&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=
+    
+    </summary>
+    
+      <category term="技术" scheme="http://xiaolianghuang.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="CDN" scheme="http://xiaolianghuang.github.io/tags/CDN/"/>
+    
+      <category term="缓存" scheme="http://xiaolianghuang.github.io/tags/%E7%BC%93%E5%AD%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Git版本控制</title>
+    <link href="http://xiaolianghuang.github.io/2017/03/23/Git%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/"/>
+    <id>http://xiaolianghuang.github.io/2017/03/23/Git版本控制/</id>
+    <published>2017-03-23T08:47:23.000Z</published>
+    <updated>2017-04-07T05:18:57.836Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Git-概览"><a href="#Git-概览" class="headerlink" title="Git 概览"></a>Git 概览</h1><p>下面这张图是根据自己理解画出来的关于git的一个大概的知识框架图，分别从版本控制的发展,Git的优点,原理和使用的角度队涉及到的知识进行了一个梳理, 最后还有一些遇到过的小问题或者是Tip的总结.</p>
+<p><img src="/2017/03/23/Git版本控制/git_knowledge_map.svg" alt=""></p>
+<h2 id="版本控制的发展和历史"><a href="#版本控制的发展和历史" class="headerlink" title="版本控制的发展和历史"></a>版本控制的发展和历史</h2><p>虽然只有几十年的时间, 但是版本控制已经有着几代的更新,最近几年,Git的发展则出现了一统江湖的局面。仔细想想，除了Git本身的优点之外，存储空间和网络速度的发展，也使得snapshot这种全量模式对空间/网络传输需求大的问题变得不那么严重，不然Git也不会有今天的江湖地位了。</p>
+<p>下面这张图描述了版本控制系统的一个总体概况，里面的绝大多数内容都来自<a href="http://gotgit.readthedocs.io/en/latest/01-meet-git/010-scm-history.html#cvs" target="_blank" rel="external">版本控制的前世和今生</a>，有兴趣的同学可以去查看原文。</p>
+<p><img src="/2017/03/23/Git版本控制/version_control.svg" alt=""></p>
+<h1 id="Git的原理和实现机制"><a href="#Git的原理和实现机制" class="headerlink" title="Git的原理和实现机制"></a>Git的原理和实现机制</h1><h2 id="分布式的版本控制系统"><a href="#分布式的版本控制系统" class="headerlink" title="分布式的版本控制系统"></a>分布式的版本控制系统</h2><p>相比于TFS/Subversion/SD这些集中式的版本控制系统，Git采取的是一种分布式的结构, 一个本地的repository就是一个完整的单机版本控制系统,加上服务器上面的remote repository以后,不同主机/用户之间就可以进行分享和协作了。</p>
+<h2 id="保存修改文件的-snapshot-而不是增量"><a href="#保存修改文件的-snapshot-而不是增量" class="headerlink" title="保存修改文件的 snapshot 而不是增量"></a>保存修改文件的 snapshot 而不是增量</h2><p>和以前集中式的版本控制系统（SVN…）所不同的是，当某个文件发生修改的时候，Git所保存的是一个全新的备份。如下图所示：</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_snapshot.png" width="80%" align="center"><br></div>
+
+<p>这样带来的好处是切换速度快，要查看某个版本（某个commit）的project信息的时候，只需要把对应的文件拿出来就可以，所以Git从任意一个版本都能够很方便的进行build或者是拆分出新的branch出来。</p>
+<p>而不好的地方就是每次一点点小小的修改都要保存一整个文件的snapshot，这样空间上会非常浪费，从而影响push和get的性能，但是因为Git本身是分布式的，常规的操作都是在本地的repository里面进行的，也就是硬盘读写，加上网络速度和存储空间越来越好，这部分的影响相对会减轻。</p>
+<h2 id="工作区，-暂存区-和-Git仓库"><a href="#工作区，-暂存区-和-Git仓库" class="headerlink" title="工作区， 暂存区 和 Git仓库"></a>工作区， 暂存区 和 Git仓库</h2><p>下图给出了Git 版本控制系统的基本机构：</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_structure.png" width="70%" align="center"><br></div>
+
+<p>它包含四个主要部分：<br><figure class="highlight groovy"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> <span class="string">WorkSpace:</span> </div><div class="line">    也叫Working Area或者工作目录，对项目的某个版本独立提取出来的内容。 这些从 Git 仓库的压缩数据库中提取出来的文件，放在磁盘上供你使用或修改。</div><div class="line"><span class="number">2.</span> <span class="string">StagingArea:</span> </div><div class="line">    也叫做Index或者暂存区域，是一个文件，保存了下次将提交的文件列表信息，一般在 Git 仓库目录中。</div><div class="line"><span class="number">3.</span> <span class="string">Repository:</span> </div><div class="line">    也叫Git仓库，是 Git 用来保存项目的元数据和对象数据库的地方。 这是 Git 中最重要的部分，从其它计算机克隆仓库时，拷贝的就是这里的数据。</div><div class="line"><span class="number">4.</span> <span class="string">RemoteRepository:</span> </div><div class="line">    网络服务器上面Git Center里面，用来保存Repository的地方，跟本地Repository相对应，通过Pull<span class="regexp">/Push/</span>Clone等方式进行操作。</div></pre></td></tr></table></figure></p>
+<p>这四个部分，尤其是前面local的三个部分，构成了我们日常使用Git的主要场景，在尝试过一些git的基本操作，比如下面这些命令以后</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git pull</div><div class="line"><span class="variable">$ </span>git status</div><div class="line"><span class="variable">$ </span>git add .</div><div class="line"><span class="variable">$ </span>git commit -m <span class="string">"xxx"</span></div><div class="line"><span class="variable">$ </span>git push</div></pre></td></tr></table></figure>
+<p>需要再进一步的时候，就需要对于这样一个基本结构，还有这些地方与Git管理的文件的状态之间的对应关系有着清晰的认识。</p>
+<h2 id="Git文件的状态和迁移"><a href="#Git文件的状态和迁移" class="headerlink" title="Git文件的状态和迁移"></a>Git文件的状态和迁移</h2><p>对应于上面一节提到的Git系统的几个部分，在某个时刻，使用Git管理的文件就有可能处于不同的位置，拥有不同的状态。下面的图就给出了Git文件可能的状态</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_file_states.png" width="80%" align="center"><br></div>
+
+<p>使用<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git status <span class="_">-s</span></div></pre></td></tr></table></figure></p>
+<p>命令就可以查看新增/修改的文件和状态:</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_status_bash_2.png" width="70%" align="center"><br></div>
+
+<p>还有一些UI的tool,比如VS Code,会有这更好的状态表示：</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_status_vscode.png" width="70%" align="center"><br></div>
+
+<p>但是使用命令行仍然是Git最主要和最为方便的模式,因此当你使用了一段时间的Git以后，使用 <em>git status -s</em> 命令查看文件的状态，并且清晰的知道其所在的位置（工作区，暂存区和git repository），和可能的状态转移，以及使用什么命令进行操作，就非常的重要了。这也是区别知道git和真正会用git的很重要一点。</p>
+<h2 id="Rollback-Clean，Reset-Checkout-Revert的使用"><a href="#Rollback-Clean，Reset-Checkout-Revert的使用" class="headerlink" title="Rollback: Clean，Reset, Checkout, Revert的使用"></a>Rollback: Clean，Reset, Checkout, Revert的使用</h2><p>最初的时候，我们的在git里面对文件的操作都是正向的，也就是 add/commit/push 这些命令，如果有问题，也可以通过修改以后再次提交的方法进行覆盖。但是在管理很多的code的时候，这样人肉的方法就会显得效率很低。</p>
+<p>作为版本控制的系统，Git其实已经提供了丰富的命令来支持rollback的操作， 有<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git clean</div><div class="line"><span class="variable">$ </span>git reset</div><div class="line"><span class="variable">$ </span>git checkout</div><div class="line"><span class="variable">$ </span>git revert</div></pre></td></tr></table></figure></p>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>Reset/Checkout 命令可以支持在文件level和commit的level进行操作，参数当中是否包含文件路径决定了这些操作是对文件还是对commit有效。</p>
+<h3 id="主要-Scenarios"><a href="#主要-Scenarios" class="headerlink" title="主要 Scenarios"></a>主要 Scenarios</h3><p>下面以基本scenario为例，来看看reset操作怎么满足我们rollback的需求。</p>
+<p>前面提到过，Git 主要有三个部分组成（不考虑 remote repository）： Workspace，Staging Area 和 Repository。当文件处于他们当中不同的位置（对应不同的状态）的时候，通过对于的操作都可以进行rollback， 以文件123.txt 为例：</p>
+<h4 id="gt-Rollback-from-Create-Not-yet-Add"><a href="#gt-Rollback-from-Create-Not-yet-Add" class="headerlink" title="&gt; Rollback from Create (Not yet Add)"></a>&gt; Rollback from Create (Not yet Add)</h4><p>这个时候，文件的状态是 unstaged/untracked， 只是在本地有一个文件而已，要进行删除的话，使用 git clean 命令。<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git clean <span class="_">-f</span></div></pre></td></tr></table></figure></p>
+<p>主要的参数有 d/n/f：<br><figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby"><span class="symbol">d:</span> 同时删除untracked的目录</span></div><div class="line">-<span class="ruby"><span class="symbol">n:</span> 显示将会做什么，但是不会真的删除文件</span></div><div class="line">-<span class="ruby">f：force， 最终删除文件</span></div></pre></td></tr></table></figure></p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_clean_bash.png" width="70%" align="center"><br></div>
+
+<p>要特别提出的是<a href="">-n</a> 这个参数，会用 <em>“would remove”</em> 提示你将会进行的操作供你检验，但是文件并不会真的被删除<br><figure class="highlight maxima"><table><tr><td class="code"><pre><div class="line">$ git clean -nf <span class="built_in">reset</span>.txt</div><div class="line">Would <span class="built_in">remove</span> <span class="built_in">reset</span>.txt</div></pre></td></tr></table></figure></p>
+<p>更详细的内容可以参考 <a href="">git clean –help</a></p>
+<h4 id="gt-Rollback-from-Add"><a href="#gt-Rollback-from-Add" class="headerlink" title="&gt; Rollback from Add"></a>&gt; Rollback from Add</h4><p>如果文件已经使用 git add, 那么文件的状态就是 stacked/modifed, 要把文件从staging area里面去掉，就需要使用 git reset 命令</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git reset <span class="number">123</span>.txt</div></pre></td></tr></table></figure>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
+
+<p>这时候文件就会从staging area里面删掉，然后恢复到workspace。<br>reset 命令还有一些参数来控制rollback的效果，比如说到workspace还是staging area，但是只在只对commit的时候才有用，就放到下面一节描述了。</p>
+<p>Rest 到 workspace以后，如果要继续删除，就像上面说的那样，使用 git clean 命令就可以了。</p>
+<h4 id="gt-Rollback-from-Commit"><a href="#gt-Rollback-from-Commit" class="headerlink" title="&gt; Rollback from Commit"></a>&gt; Rollback from Commit</h4><p>如果文件已经用 git commit 提交到repository, 那么文件的状态就是 stacked/modifed, 要把文件从staging area里面去掉，就需要使用 git reset 命令。</p>
+<p>前面提到过作用域的问题，reset命令后面是不是带有文件名，将会决定这个rollback操作影响的对象是一个文件还是一整个commit（可以包含多个文件修改）</p>
+<h5 id="–-文件层面的-reset-操作"><a href="#–-文件层面的-reset-操作" class="headerlink" title="– 文件层面的 reset 操作"></a>– 文件层面的 reset 操作</h5><p>如下所示，如果reset命令后面带有具体的路径，那么commit里面与这个路径/文件不相关的文件就不会被影响。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ git <span class="keyword">reset</span> <span class="keyword">head</span>^ <span class="number">123.</span>txt</div></pre></td></tr></table></figure>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
+
+<p>这时候文件的snapshot就会从staging area里面删掉，然后恢复到workspace。</p>
+<p>下面这张图显示了 clean 和 reset 命令对文件的影响</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_rollback_scenarios.png" width="60%" align="center"><br></div>
+
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">HEAD 参数：</div><div class="line"></div><div class="line">然后我们注意到，对<span class="keyword">Commit</span>进行<span class="keyword">rollback</span>操作的时候，有个 <span class="keyword">head</span> 的参数，后面还带有^或者是~<span class="number">2</span>这样的符号, 这个参数表明的是<span class="keyword">rollback</span>到哪个<span class="keyword">commit</span>。 <span class="keyword">HEAD</span>其实是一个指针（Git内部结构里面会讲到），指向当前最新的<span class="keyword">commit</span>, <span class="keyword">head</span>^表示的是<span class="keyword">parent</span>，也就是上一个<span class="keyword">commit</span>，<span class="keyword">head</span>^^这是表示再早一个的<span class="keyword">commit</span>。当需要<span class="keyword">rollback</span>到更早的<span class="keyword">commit</span>的时候，则需要使用~n的表示方法，所以<span class="keyword">head</span>^ 跟 <span class="keyword">head</span>~<span class="number">1</span>是等价的。</div></pre></td></tr></table></figure>
+<p>要查看head或者head^对应的commit，运行下面的命令就可以了<br><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ git <span class="keyword">show</span> <span class="keyword">head</span></div></pre></td></tr></table></figure></p>
+<p>然后还要说明的是，当repository里面只包含一个commit的时候，这个reset命令其实是不起作用的，因为HEAD再往前找不到更早的commit了。但是这个时候因为只有一个commit，reset相当于重新init一个git，所以也并没有关系。</p>
+<h5 id="–-Commit-层面的-reset-操作"><a href="#–-Commit-层面的-reset-操作" class="headerlink" title="– Commit 层面的 reset 操作"></a>– Commit 层面的 reset 操作</h5><p>当通过reset来rollback整个commit的时候，其作用域就是所有包含在commit里面的文件。下面的例子说明了两个文件时候的情况。</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_commit.png" width="70%" align="center"><br></div>
+
+<p>可以看到，commit过的两个文件都被放回到了staging area里面，变成modified的状态了。</p>
+<p>需要说明的是，当使用reset命令对commit作用域进行操作的时候，head指针会移动到reset之后的那个commit。所以show head 命令以后，我么看到的commit是init而不是update。</p>
+<p>reset 命令还有一些参数来控制rollback的效果，比如说到workspace还是staging area</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">-soft – 缓存区和工作目录都不会被改变</span></div><div class="line">-<span class="ruby">-mixed – 默认选项。缓存区和你指定的提交同步，但工作目录不受影响</span></div><div class="line">-<span class="ruby">-hard – 缓存区和工作目录都同步到你指定的提交</span></div></pre></td></tr></table></figure>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_commit_parameters.png" width="60%" align="center"><br></div>
+
+<h5 id="–-通过-revert-来进行-commit-层面的rollback"><a href="#–-通过-revert-来进行-commit-层面的rollback" class="headerlink" title="– 通过 revert 来进行 commit 层面的rollback"></a>– 通过 revert 来进行 commit 层面的rollback</h5><p>除了 Reset 之外， git 还提供了一个命令 Revert 来进行rollback的操作，但是不同的是， Revert 命令不会往前移动 HEAD，而是会把修改当成一个新的commit 附加在原先的 HEAD 后面，并且移动 HEAD 到最新的 commit。</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/reset_vs_revert.png" width="80%" align="center"><br></div>
+
+
+<h4 id="gt-Rollback-from-Branch"><a href="#gt-Rollback-from-Branch" class="headerlink" title="&gt; Rollback from Branch"></a>&gt; Rollback from Branch</h4><p>方便的 branch 分支管理是 Git 的一个重要特点，通过新建branch，可以针对一个feature进行独立开发，也可以很容易的在几个人之前share 临时的change （SD 里面可能就需要通过dpk打包之类的方式来实现）。</p>
+<p>所以checkout 应该是使用频率仅次于add/commit/push/pull 的命令了，当传入分支名时，可以切换到那个分支。<br><figure class="highlight ebnf"><table><tr><td class="code"><pre><div class="line"><span class="attribute">git checkout hotfix</span></div></pre></td></tr></table></figure></p>
+<p>上面这个命令做的不过是将HEAD移到一个新的分支，然后更新工作目录。因为这可能会覆盖本地的修改，Git强制你提交或者缓存工作目录中的所有更改，不然在checkout的时候这些更改都会丢失。和git reset不一样的是，git checkout没有移动这些分支。</p>
+<p>下面这张图说明了 checkout 的使用效果。</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_checkout.png" width="60%" align="center"><br></div>
+
+<p>这一章节总结了git里面rollback相关的主要scenario和相关的解决办法，关于rollback 还有更多细致的分析和别的操作方法，比如checkout到某个commit，以及关于rollback时候，git内部结构的变化，可以参考<a href="https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-代码回滚%EF%BC%9AReset、Checkout、Revert的选择" target="_blank" rel="external">代码回滚：Reset、Checkout、Revert的选择</a></p>
+<h3 id="Merge-on-Conflict"><a href="#Merge-on-Conflict" class="headerlink" title="Merge on Conflict"></a>Merge on Conflict</h3><h3 id="Submodule-Repository-Reference"><a href="#Submodule-Repository-Reference" class="headerlink" title="Submodule: Repository Reference"></a>Submodule: Repository Reference</h3><h2 id="Git的内部实现"><a href="#Git的内部实现" class="headerlink" title="Git的内部实现"></a>Git的内部实现</h2><h2 id="Paging-分页器"><a href="#Paging-分页器" class="headerlink" title="Paging 分页器"></a>Paging 分页器</h2><p>这部分内容摘自 <a href="http://gotgit.readthedocs.io/en/latest/01-meet-git/020-love-git.html#git" target="_blank" rel="external">爱上Git的理由</a></p>
+<p>虽然拥有图形化的客户端，但Git更有效率的操作方式还是命令行操作。使用命令行操作的好处一个是快，另外一个就是防止鼠标手的出现。Git的命令行进行了大量的人性化设计，包括命令补全、彩色字符输出等，不过最具特色的还是无处不在的分页器。</p>
+<p>在操作其他版本控制系统的命令行时，如果命令的输出超过了一屏，为了能够逐屏显示，需要在命令的后面加上一个管道符号将输出交给一个分页器。例如：<br><figure class="highlight gams"><table><tr><td class="code"><pre><div class="line"><span class="symbol">$</span> svn <span class="built-in">log</span> | less</div></pre></td></tr></table></figure></p>
+<p>而Git则不用如此麻烦，因为常用的Git的命令都带有一个分页器，当一屏显示不下时启动分页器。分页器默认使用less命令（less -FRSX）进行分页。</p>
+<p>因为less分页器在翻屏时使用了vi风格的热键，如果您不熟悉vi的话，可能会遇到麻烦。下面是在分页器中常用的热键：<br><figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby"> q：退出分页器。</span></div><div class="line">-<span class="ruby"> h：显示分页器帮助。</span></div><div class="line">-<span class="ruby"> 空格: 下翻一页</span></div><div class="line">-<span class="ruby"> <span class="symbol">b:</span> 上翻一页。</span></div><div class="line">-<span class="ruby"> d/u：分别代表向下翻动半页和向上翻动半页。</span></div><div class="line">-<span class="ruby"> j/k：分别代表向上翻一行和向下翻一行。</span></div><div class="line">-<span class="ruby"> 如果行太长被截断，可以用左箭头和右箭头使得窗口内容左右滚动。</span></div><div class="line">-<span class="ruby"> 输入/pattern：向下寻找和pattern匹配的内容。</span></div><div class="line">-<span class="ruby"> 输入?pattern：向上寻找和pattern匹配的内容。</span></div><div class="line">-<span class="ruby"> 字母n或N：代表向前或向后继续寻找。</span></div><div class="line">-<span class="ruby"> 字母g：跳到第一行；字母G：跳到最后一行；输入数字再加字母g：则跳转到对应的行。</span></div><div class="line">-<span class="ruby"> 输入!&lt;command&gt;：可以执行Shell命令。</span></div></pre></td></tr></table></figure></p>
+<p>对于默认未提供分页器的Git命令，例如git status命令，可以通过下面任一方法启用分页器：</p>
+<p>在git和子命令（如status）之间插入参数-p或–paginate，为命令启用内建分页器。如：<br><figure class="highlight stylus"><table><tr><td class="code"><pre><div class="line">$ git -<span class="selector-tag">p</span> status</div></pre></td></tr></table></figure></p>
+<p>设置Git配置变量，设置完毕后运行相应的命令，将启用内建分页器。<br><figure class="highlight autoit"><table><tr><td class="code"><pre><div class="line">$ git config --<span class="keyword">global</span> pager.status <span class="literal">true</span></div></pre></td></tr></table></figure></p>
+<p>Git命令的分页器支持带颜色的字符输出，对于太长的行则采用截断方式处理（可用左右方向键滚动）。如果不习惯分页器的长行截断模式而希望采用自动折行模式，可以通过下面任一方法进行设置：</p>
+<p>通过设置LESS环境变量来实现。<br><figure class="highlight cmake"><table><tr><td class="code"><pre><div class="line">$ <span class="keyword">export</span> <span class="keyword">LESS</span>=FRX</div></pre></td></tr></table></figure></p>
+<p>或者通过定义Git配置变量来改变分页器的默认行为。<br><figure class="highlight stylus"><table><tr><td class="code"><pre><div class="line">$ git config --global core<span class="selector-class">.pager</span> <span class="string">'less -+$LESS -FRX'</span></div></pre></td></tr></table></figure></p>
+<h1 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h1><h2 id="Config-Git–局部设置与全局设置"><a href="#Config-Git–局部设置与全局设置" class="headerlink" title="Config Git–局部设置与全局设置"></a>Config Git–局部设置与全局设置</h2><p>最开始使用 git 的时候，都是按照网上的介绍 step by step，然后切到一个新的地方，就会发现一些奇怪的事情，比如说，我安装了Git的时候，是用来sync BitBucket上面的Repository的，但是后来用来处理Github上面的Repository为什么记录里面显示的还是之前的BitBucket账号提交的呢？</p>
+<p>原因就是Git的的设置方式。有全局设置和局部设置</p>
+<h3 id="局部设置"><a href="#局部设置" class="headerlink" title="局部设置"></a>局部设置</h3><p>当你Init或者Clone一个Git Repository的时候，Git都会在指定目录（一般是当前目录）建立一个.git的文件夹，用来保存当前Repository的相关内容，跟这个Repository相关的设置也在这个目录当中，保存在一个名为config的文件当中<br><figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">-.git</span></div><div class="line">  |</div><div class="line">  -<span class="ruby">-config</span></div></pre></td></tr></table></figure></p>
+<p>其中的内容是诸如下面的config<br><figure class="highlight coffeescript"><table><tr><td class="code"><pre><div class="line">[remote <span class="string">"Hexo"</span>]</div><div class="line">	url = https:<span class="regexp">//gi</span>thub.com/laomanco/Hexo.git</div><div class="line">	fetch = +refs<span class="regexp">/heads/</span>*:refs<span class="regexp">/remotes/Hexo/</span>*</div><div class="line">[branch <span class="string">"master"</span>]</div><div class="line">	remote = Hexo</div><div class="line">	merge = refs/heads/master</div><div class="line">[user]</div><div class="line">    name = laomanco</div><div class="line">    email =laomanco@gmail.com</div></pre></td></tr></table></figure></p>
+<p>除了直接修改config文件，还可以通过命令行来进行设置，例如，要设置当前Git Repository Commit 等等的用户信息</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><div class="line">$ git config user<span class="selector-class">.name</span> laomanco</div><div class="line">$ git config user<span class="selector-class">.email</span> laomanco@gmail.com</div></pre></td></tr></table></figure>
+<p>要查看config的内容的话，用get命令就可以，更多具体内容可以参考<a href="https://cnbin.github.io/blog/2015/06/19/git-config-ming-ling-cha-kan-pei-zhi-wen-jian/" target="_blank" rel="external">Git Config 命令查看配置文件</a><br><figure class="highlight arduino"><table><tr><td class="code"><pre><div class="line">$ git <span class="built_in">config</span> --<span class="built_in">get</span> user.name</div><div class="line">laomanco</div></pre></td></tr></table></figure></p>
+<h3 id="全局设置"><a href="#全局设置" class="headerlink" title="全局设置"></a>全局设置</h3><p>在安装Git的时候，系统就会为当前用户添加一个全局的系统设置，存放在下面的目录当中</p>
+<figure class="highlight taggerscript"><table><tr><td class="code"><pre><div class="line">C:<span class="symbol">\U</span>sers<span class="symbol">\&lt;</span>username&gt;<span class="symbol">\.</span>gitconfig</div></pre></td></tr></table></figure>
+<p>里面包含的config内容格式与局部config非常的类型，也可以通过修改文件和命令行的方式进行修改，不过通过命令行进行设置的时候，需要在config命令里面加上–global的参数</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">$ git <span class="built_in">config</span> <span class="comment">--global user.name laomanco</span></div><div class="line">$ git <span class="built_in">config</span> <span class="comment">--global user.email laomanco@gmail.com</span></div><div class="line">$ git <span class="built_in">config</span> <span class="comment">--global --get user.name</span></div></pre></td></tr></table></figure>
+<h2 id="Git-在-windows-下中文乱码"><a href="#Git-在-windows-下中文乱码" class="headerlink" title="Git 在 windows 下中文乱码"></a>Git 在 windows 下中文乱码</h2><p>在windows下面使用git来添加中文名称的文件名的时候，会遇到类似于下面的，文件名被转码，无法识别的问题：<br><figure class="highlight lsl"><table><tr><td class="code"><pre><div class="line">\<span class="number">316</span>\<span class="number">304</span>\<span class="number">261</span>\<span class="number">276</span>\<span class="number">316</span>\<span class="number">304</span>\<span class="number">265</span>\<span class="number">265.</span>md</div></pre></td></tr></table></figure></p>
+<p>其原因是 Git 使用的是 utf-8 的编码方式，而在windows下面默认采用的则是Unicode，因而出现了编码和解码不一致的问题。解决的方法是在git上面进行下面的设置, 让git支持utf-8编码 ( <a href="https://gist.github.com/nightire/5069597" target="_blank" rel="external">解决 Git 在 windows 下中文乱码的问题</a> ) ：<br><figure class="highlight coffeescript"><table><tr><td class="code"><pre><div class="line">$ git config --<span class="built_in">global</span> core.quotepath <span class="literal">false</span>  		<span class="comment"># 显示 status 编码</span></div><div class="line">$ git config --<span class="built_in">global</span> gui.encoding utf<span class="number">-8</span>			<span class="comment"># 图形界面编码</span></div><div class="line">$ git config --<span class="built_in">global</span> i18n.commit.encoding utf<span class="number">-8</span>	<span class="comment"># 提交信息编码</span></div><div class="line">$ git config --<span class="built_in">global</span> i18n.logoutputencoding utf<span class="number">-8</span>	<span class="comment"># 输出 log 编码</span></div><div class="line">$ <span class="keyword">export</span> LESSCHARSET=utf<span class="number">-8</span></div><div class="line"><span class="comment"># 最后一条命令是因为 git log 默认使用 less 分页，所以需要 bash 对 less 命令进行 utf-8 编码</span></div></pre></td></tr></table></figure></p>
+<h1 id="Rerence"><a href="#Rerence" class="headerlink" title="Rerence"></a>Rerence</h1><p><a href="http://gotgit.readthedocs.io/en/latest/01-meet-git/010-scm-history.html#cvs" target="_blank" rel="external">版本控制的前世和今生</a></p>
+<p><a href="https://www.git-tower.com/learn/git/ebook/cn/command-line/appendix/why-git" target="_blank" rel="external">为什么选择 Git</a></p>
+<p><a href="http://gotgit.readthedocs.io/en/latest/01-meet-git/020-love-git.html#git" target="_blank" rel="external">爱上Git的理由</a></p>
+<p><a href="http://www.cnblog.me/2016/04/04/git-permissions/" target="_blank" rel="external">Git 权限控制</a></p>
+<p><a href="https://cnbin.github.io/blog/2015/06/19/git-config-ming-ling-cha-kan-pei-zhi-wen-jian/" target="_blank" rel="external">Git Config 命令查看配置文件</a></p>
+<p><a href="http://linlexus.com/git-submodule-usage/" target="_blank" rel="external">如何使用 Git Submodule</a></p>
+<p><a href="https://gist.github.com/nightire/5069597" target="_blank" rel="external">解决 Git 在 windows 下中文乱码的问题</a></p>
+<p><a href="http://teohm.com/blog/learning-git-internals-by-example/" target="_blank" rel="external">Learning Git Internals by Example</a></p>
+<p><a href="http://blog.xiayf.cn/2013/09/28/learning-git-internals-by-example/" target="_blank" rel="external">通过示例学习Git内部构造（译）</a></p>
+<p><a href="http://huanglei.me/git-theory.html" target="_blank" rel="external">图解git – 用图片分析学习git原理</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Git-概览&quot;&gt;&lt;a href=&quot;#Git-概览&quot; class=&quot;headerlink&quot; title=&quot;Git 概览&quot;&gt;&lt;/a&gt;Git 概览&lt;/h1&gt;&lt;p&gt;下面这张图是根据自己理解画出来的关于git的一个大概的知识框架图，分别从版本控制的发展,Git的优点,原理和
+    
+    </summary>
+    
+      <category term="技术" scheme="http://xiaolianghuang.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Git" scheme="http://xiaolianghuang.github.io/tags/Git/"/>
+    
+      <category term="技术" scheme="http://xiaolianghuang.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用Hexo搭建博客</title>
+    <link href="http://xiaolianghuang.github.io/2017/03/21/%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
+    <id>http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/</id>
+    <published>2017-03-20T16:51:38.000Z</published>
+    <updated>2017-04-07T05:18:57.883Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。</p>
+<p>Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是build成一个个的静态页面，而不是存在数据库里面动态加载。</p>
+<p><img src="/2017/03/21/使用Hexo搭建博客/hexo_xmind.png" alt=""></p>
+<p>上面这张图给出了利用Hexo搭建自己的博客所涉及到的几个方面, 归纳起来就是下面几个问题：</p>
+<blockquote>
+<p>(1). 如何搭建博客？<br>(2). Host在哪里？<br>(3). 怎么发布？<br>(4). 域名管理<br>(5). 代码管理 </p>
+</blockquote>
+<h1 id="如何搭建网站：使用Hexo"><a href="#如何搭建网站：使用Hexo" class="headerlink" title="如何搭建网站：使用Hexo"></a>如何搭建网站：使用Hexo</h1><p>使用Hexo来搭建一个博客系统，包含下面几个部分的工作：</p>
+<h2 id="Hexo环境配置"><a href="#Hexo环境配置" class="headerlink" title="Hexo环境配置"></a>Hexo环境配置</h2><p><a href="http://hexo.io/zh-cn/" target="_blank" rel="external">Hexo</a> 是基于Node.js的，安装好Node以后，直接通过npm就可以安装Hexo以及相关的扩展。然后因为是Hexo是通过Git来发布信息的，所以Git，以及Github（或者其他的替代产品，e.g.国内的BitBucket，CitCafe）的账号也是必须的。</p>
+<p>准备工作：<br><figure class="highlight crmsh"><table><tr><td class="code"><pre><div class="line">(<span class="number">1</span>). 安装<span class="keyword">Node</span><span class="title">，并通过npm</span>安装Hexo</div><div class="line">(<span class="number">2</span>). 安装Git并且注册GitHub账号</div></pre></td></tr></table></figure></p>
+<p><em>Note: 直到后面真正发布网站之前，Git其实是并不需要的，为了不引起一些不必要的疑惑，这里讲跳过Git相关的具体内容。</em></p>
+<p>Node 下载并安装好了以后，在命令行输入<br><figure class="highlight ada"><table><tr><td class="code"><pre><div class="line">$ npm <span class="comment">--version</span></div></pre></td></tr></table></figure></p>
+<p>测试一下 npm 是不是装好了（npm 是node 用来管理各种package的工具，类似于Visual Studio里面的nuget，关于npm包管理工具的详细信息，可以参考<a href="http://www.ruanyifeng.com/blog/2016/01/npm-install.html" target="_blank" rel="external">npm 模块安装机制简介</a>）。</p>
+<p>一切OK以后，然后就可以安装Hexo了。真正安装的时候，比想象中要简单得多的多，命令行里面输入下面的命令就搞定了：<br><figure class="highlight avrasm"><table><tr><td class="code"><pre><div class="line">$ npm install -g hexo-<span class="keyword">cli</span></div></pre></td></tr></table></figure></p>
+<p>安装好以后，输入<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>hexo</div></pre></td></tr></table></figure></p>
+<p>看是否出现Commands的提示，有就说明一切正常，可以进行下一步了</p>
+<h2 id="新建一个Blog网站"><a href="#新建一个Blog网站" class="headerlink" title="新建一个Blog网站"></a>新建一个Blog网站</h2><p>安装 Hexo 完成后，请执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>hexo init &lt;folder&gt;</div><div class="line"><span class="variable">$ </span>cd &lt;folder&gt;</div><div class="line"><span class="variable">$ </span>npm install</div></pre></td></tr></table></figure>
+<p>经过这三个简单的命令，一个Hex的博客网站就建成了。默认情况下，会安装一个landscape的主题，和一篇hello world的文章。</p>
+<h2 id="进行本地测试"><a href="#进行本地测试" class="headerlink" title="进行本地测试"></a>进行本地测试</h2><p>在命令行里面输入<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>hexo s</div></pre></td></tr></table></figure></p>
+<p>就可以启动一个本地的service<br><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ hexo s</div><div class="line">INFO  <span class="keyword">Start</span> processing</div><div class="line">INFO  Hexo <span class="keyword">is</span> running <span class="keyword">at</span> <span class="keyword">http</span>://localhost:<span class="number">4000</span>/. Press Ctrl+C <span class="keyword">to</span> stop.</div></pre></td></tr></table></figure></p>
+<p>在浏览器输入<a href="http://localhost:4000/" target="_blank" rel="external">localhost:4000</a> (4000是默认端口)就可以看到下面的网站首页了</p>
+<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/hello_world.png" width="80%" align="center"><br></div>
+
+<p>完成以后，会生成一个Hexo项目的文件夹，名字就是前面 <em>init</em> 命令参数里面的<em>folder</em>，各个文件夹的含义参考<a href="https://hexo.io/zh-cn/docs/setup.html" target="_blank" rel="external">官方网站说明</a>。</p>
+<h2 id="往Blog里面添加一篇新的文章"><a href="#往Blog里面添加一篇新的文章" class="headerlink" title="往Blog里面添加一篇新的文章"></a>往Blog里面添加一篇新的文章</h2><p>当测试环境调通以后，下面就尝试自己添加一篇blog文章吧，方法也是超级简单，只需要执行下面的命令就可以了<br><figure class="highlight gauss"><table><tr><td class="code"><pre><div class="line">$ hexo <span class="keyword">new</span> &lt;<span class="built_in">title</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>然后打开 <a href="">/source/_posts</a> 就会发现一个 <em>title.md</em> 命名的文件，例如我的title是MyFirstBlog,于是就是生产一个名为 MyFirstBlog.md 文件，还有一个同名文件夹用来存放一些图片之类的资源文件供文章引用。</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><div class="line"><span class="string">|--souce</span></div><div class="line">  <span class="string">|--_posts</span></div><div class="line">     <span class="string">|--MyFirstBlog</span></div><div class="line">     <span class="string">|--MyFirstBlog.md</span></div></pre></td></tr></table></figure>
+<p>打开 MyFirstBlog.md，可以看到如下的内容</p>
+<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/fisrt_blg.png" width="80%" align="center"><br></div>
+
+<p>文件最上方用 — 隔开的部分叫做 Front-matter，用来定义文件本身的一些属性，名字，日期什么的，还可以配置其他的Catagory,Tag之类的信息，具体内容可以参考 <a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="external">官方文档Front-matter</a> 章节。</p>
+<p>剩下的部分就是正文了，用 Markdown 写文章成了这几年的一种主流方式，个人感觉是一种非常简洁的方式，语法比较简单，解释转换出来的效果也很干净，看起来觉得很舒服，或者说很专业，有点早年用Latex写论文的感觉，但是要容易很多。关于 Markdown语法，网上有很多的资料介绍，搜索 <em>“为什么要用 Markdown 写文章”</em> 就会出来很多介绍文章，这里就不详细展开了。当然，任何事情都有两面性，Markdown 也有它不足的地方，比如图片的引用，<a href="https://sspai.com/post/37340" target="_blank" rel="external">反思Markdown：Markdown的长与短</a> 里面总结的很好，可以花几分钟时间看看。</p>
+<p>需要说明的是，用Markdown写文档，并不是像Word一样所见即所得的，所以需要有专门的编辑器来进行一定的解释转换，晚上工具很多，到底哪个好也是看个人喜好，尝试了好几种的工具以后，偶然发现我软的 VS Code 可以支持 Markdown，个人就深深的喜欢上了。</p>
+<p>到这里为止，我们已经能够完整的在本地用Hexo搭建一个自己的博客了，Hexo还有很多其他的扩展功能，比如说<br><figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">-设置Blog的主题</span></div><div class="line">-<span class="ruby">-启用Catalog/Tag</span></div><div class="line">-<span class="ruby">-添加第三方Comments插件</span></div></pre></td></tr></table></figure></p>
+<p>为了不会因为走的太远而打断思路，这些扩展功能将放在后面进行介绍。在完成了本地环境的搭建以后，我们接下来要做的，是将这个Blog搬到真正可以puglic访问的网络上。</p>
+<h1 id="Host在哪里：Cloud-或者Git-Pages"><a href="#Host在哪里：Cloud-或者Git-Pages" class="headerlink" title="Host在哪里：Cloud 或者Git Pages"></a>Host在哪里：Cloud 或者Git Pages</h1><h2 id="Git-Pages"><a href="#Git-Pages" class="headerlink" title="Git Pages"></a>Git Pages</h2><h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>如何注册GitHub以及建立Repository,可以参考 <a href="http://www.jianshu.com/p/e99ed60390a8" target="_blank" rel="external">20分钟教你使用hexo搭建github博客</a>,。</p>
+<p>在最开是的需求里面，Git 是用来将生成的静态网站内容同步到GitHib上去的, 所以这里需要注册GitHub账号并且下载客户端, 实际上, 我们最会用到两个Git Repository, 一个用来上传Build出来的静态网站, 另外一个这是用来管理我们自己整个Hexo的project, 以便于我们可以随时的在不同的电脑上面进行修改. 其中的关系可以用下面的图来表示：</p>
+<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/git_repo.png" width="80%" align="center"><br></div>
+
+<p>需要注意的是，在create repository的时候，名字必须是{username}.github.io, 也就是GitHub默认分配给你账号的域名。详细原因在后面讲Deploy的章节来解释</p>
+<h2 id="第三方Cloud-Service"><a href="#第三方Cloud-Service" class="headerlink" title="第三方Cloud Service"></a>第三方Cloud Service</h2><h1 id="如何发布：deploy到git-repository"><a href="#如何发布：deploy到git-repository" class="headerlink" title="如何发布：deploy到git repository"></a>如何发布：deploy到git repository</h1><h1 id="域名管理"><a href="#域名管理" class="headerlink" title="域名管理"></a>域名管理</h1><h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><h2 id="解析绑定域名到自己的Service"><a href="#解析绑定域名到自己的Service" class="headerlink" title="解析绑定域名到自己的Service"></a>解析绑定域名到自己的Service</h2><h1 id="代码管理"><a href="#代码管理" class="headerlink" title="代码管理"></a>代码管理</h1><h2 id="新建一个Git-Repository或者-Branch"><a href="#新建一个Git-Repository或者-Branch" class="headerlink" title="新建一个Git Repository或者 Branch"></a>新建一个Git Repository或者 Branch</h2><h2 id="Project-结构：-那些需要同步"><a href="#Project-结构：-那些需要同步" class="headerlink" title="Project 结构： 那些需要同步"></a>Project 结构： 那些需要同步</h2><h1 id="一些扩展功能的介绍"><a href="#一些扩展功能的介绍" class="headerlink" title="一些扩展功能的介绍"></a>一些扩展功能的介绍</h1><h2 id="扩展功能：设置Blog的主题Theme"><a href="#扩展功能：设置Blog的主题Theme" class="headerlink" title="扩展功能：设置Blog的主题Theme"></a>扩展功能：设置Blog的主题Theme</h2><h2 id="扩展功能-Catalog-Tag"><a href="#扩展功能-Catalog-Tag" class="headerlink" title="扩展功能: Catalog/Tag"></a>扩展功能: Catalog/Tag</h2><h2 id="扩展功能：第三方Comments插件的使用"><a href="#扩展功能：第三方Comments插件的使用" class="headerlink" title="扩展功能：第三方Comments插件的使用"></a>扩展功能：第三方Comments插件的使用</h2><h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><h2 id="Markdown语法高亮支持的语言列表"><a href="#Markdown语法高亮支持的语言列表" class="headerlink" title="Markdown语法高亮支持的语言列表"></a>Markdown语法高亮支持的语言列表</h2><p>Markdown可以在引用的 block 里面指定代码 highlight 时候使用的语言，<br><figure class="highlight csharp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// begin code block with " ```csharp " to specify language as C#</span></div><div class="line"><span class="keyword">using</span> System;</div><div class="line"></div><div class="line"><span class="keyword">namespace</span> <span class="title">Demo</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DemoClass</span>: <span class="title">IHighlight</span></div><div class="line">  &#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">string</span> _language;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">GetLanguage</span>(<span class="params"></span>)</span></div><div class="line">    &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>._language;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="comment">// end code block with " ``` "</span></div></pre></td></tr></table></figure></p>
+<p>支持的全部语言列表参见 [Syntax highlighting in markdown] (<a href="https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown" target="_blank" rel="external">https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown</a>)</p>
+<h1 id="Refrence"><a href="#Refrence" class="headerlink" title="Refrence"></a>Refrence</h1><p><a href="http://www.ruanyifeng.com/blog/2016/01/npm-install.html" target="_blank" rel="external">npm 模块安装机制简介</a><br><a href="https://hexo.io/zh-cn/" target="_blank" rel="external">Hexo官方网站</a><br><a href="https://markdown-zh.readthedocs.io/en/latest/blockelements/" target="_blank" rel="external">Markdown 中文文档</a><br><a href="https://wizardforcel.gitbooks.io/markdown-simple-world/content/" target="_blank" rel="external">Markdown 简单的世界</a><br><a href="http://www.xmind.net/" target="_blank" rel="external">Xmind 官方网站</a><br><a href="https://blog.coding.net/blog/coding-mindmap" target="_blank" rel="external">让思路更清晰——我是怎样使用思维导图的</a><br><a href="https://sspai.com/post/36275" target="_blank" rel="external">iPic + Typora，方便快捷地在 Markdown 中插图</a><br><a href="http://www.jianshu.com/p/9be87e7e15bf" target="_blank" rel="external">如何在 Markdown 注释一段文字</a><br><a href="http://www.jianshu.com/p/9d94660a96f1" target="_blank" rel="external">MarkDown使用小技巧</a><br><a href="https://typora.io/" target="_blank" rel="external">MarkDown编辑器 Typora</a><br><a href="https://sspai.com/post/37340" target="_blank" rel="external">反思Markdown：Markdown的长与短</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有
+    
+    </summary>
+    
+      <category term="技术" scheme="http://xiaolianghuang.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Hexo" scheme="http://xiaolianghuang.github.io/tags/Hexo/"/>
+    
+      <category term="博客" scheme="http://xiaolianghuang.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>紫竹工会第五届“Diodes-BCD杯”职工羽毛球比赛</title>
+    <link href="http://xiaolianghuang.github.io/2016/12/12/%E7%B4%AB%E7%AB%B9%E5%B7%A5%E4%BC%9A%E7%AC%AC%E4%BA%94%E5%B1%8A%E2%80%9CDiodes-BCD%E6%9D%AF%E2%80%9D%E8%81%8C%E5%B7%A5%E7%BE%BD%E6%AF%9B%E7%90%83%E6%AF%94%E8%B5%9B/"/>
+    <id>http://xiaolianghuang.github.io/2016/12/12/紫竹工会第五届“Diodes-BCD杯”职工羽毛球比赛/</id>
+    <published>2016-12-12T03:04:25.000Z</published>
+    <updated>2017-04-07T05:18:57.920Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/2016/12/12/紫竹工会第五届“Diodes-BCD杯”职工羽毛球比赛/diodes_bcd_badmintion.jpg" alt=""></p>
+<p>在工会的热心组织和同学们的大力支持下，我们微软代表队在这次的羽毛球比赛当中发挥出色，最后获得了比赛的季军！</p>
+<p>本次比赛，我们派出了新老结合的阵容，男生里面，派出了实力超强的亦恒，心理素质稳定的Steven, 还有过去一年进步明显的Will。女生则派出了Eva跟Lili两名主力。实力还是非常的强大和均衡的。</p>
+<p>小组赛，我们同组的微创跟意法半导体先赛一场，这给了我们观察对手的 机会。发现对手实力一般以后，我们决定雪藏亦恒，让Will/Eva, Steven/Lili 分别作为男单/女单出场，最后由亦横垫底打混双，以防止意外，这样能够在保证出线的前提下给队员多的出场机会，让亦横给后面的比赛保存体力。第一场对阵意法半导体，首发出场的Will虽然实力更胜一筹，但是有些紧张，比分一直被对手咬得很紧，不过好在最后胜利拿下。第二个出场的Eva则兵不血刃地拿下了对手。第二场面对微创，他们有一名男选手和一名女选手很厉害，但是第一场是雪藏了打混双的。这次拿出来分别打了男单和女单，stven面对势均力敌的对搜，心理素质稳定的优势体现了出来，最后拿下比赛，lili则遭遇了全场最厉害的女生，实力明显高出其他人一大截的微创女一号，败下阵来，但是垫底的混双轻取对手。我们以小组第一的身份晋级十六强。</p>
+<p>得益于小组第一的身份，我们避开了intel/615所这样的强队，仅仅在半决赛的时候会碰到去年的亚军晟碟半导体。</p>
+<p>八分之一决赛，我们让亦恒/Lili这对最有把握的组合打混双垫底，steven打男单，Eva打女单，第一场，Steven惜败，好在Eva顶住了压力，拿下第二局，等到第三场亦恒/Lili出场以后，对手就只能目送我们晋级了。</p>
+<p>四分之一决赛，我们的对手是花王研发，其男单实力非常的强劲，这个时候，我们决定改变战术，让雪藏了的亦恒来拼第一场，Eva打女单应该没有压力，就算第一场输掉，我们还有lili/steven可以补救，结果亦恒一出手就勇猛无比，跟对手联手奉献了一场超级精彩的男单，并且最终21：19拿下比赛，顺利送我们晋级四强。</p>
+<p>半决赛果然碰到了恩格斯豪斯，我们继续沿用了四分之一决赛的布阵，第一场男单也是打得难解难分，甚至都达到了一分决胜负的20平，最后一球，对方竟然杀了个滚网，靠运气赢下来比赛。虽然我们第二场拿下了对方的女单，但是第三场比赛，steven跟lili的配合还是略为生疏，最终没能挺进决赛。</p>
+<p>到了三四名决赛，大家已经彻底放下了心理负担，steven顺利拿下男单，但是Eva因为打了太多比赛而体力不支，输掉了第二局，到了第三场，我们开始几分没能找到状态，一度落后五六分之多，但是等亦恒/lili的组合找到状态以后，对手就再也没有机会了。</p>
+<p>经过六场比赛的艰苦拼搏，我们成功站到了领奖台，捧到了季军的奖杯。<br>除了工会和参加比赛的同学们，也要感谢很多其他默默支持我们的同学，他们对对手实力战术的观察，亲临现场的加油助威都给了我们的选手莫大的鼓励！</p>
+<p>附： 比赛规程<br><figure class="highlight lsl"><table><tr><td class="code"><pre><div class="line">一、主办单位： 上海紫竹高新技术产业开发区工会委员会</div><div class="line">二、承办单位：上海新进芯微电子有限公司(Diodes-BCD)</div><div class="line">三、协办单位：中广核设计院上海分院</div><div class="line">四、比赛日期： <span class="number">2016</span>年<span class="number">12</span>月<span class="number">2</span>日(星期五)下午 </div><div class="line">五、比赛地点：上海中广核工程科技有限公司（紫星路<span class="number">1588</span>号）</div><div class="line">六、比赛项目： 男、女混合团体赛</div><div class="line">七、参加办法</div><div class="line">    <span class="number">1.</span> 参加比赛各单位可报<span class="number">1</span>队，每队可报领队、教练员各<span class="number">1</span>名，参赛运动员可报<span class="number">3</span>男<span class="number">2</span>女</div><div class="line">      （男、女单打不得兼报混合双打）。</div><div class="line">    <span class="number">2.</span> 参赛运动员资格</div><div class="line">        &gt; 参赛运动员资格必须是紫竹高新区入驻企业在职（包括下属合同编制）的职工；</div><div class="line">        &gt; 有关单位工作人员较少，可以联合组队参赛，但必须符合上述规定；</div><div class="line">        &gt; 为了严肃纪律，严禁弄虚作假及冒名顶替；</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/2016/12/12/紫竹工会第五届“Diodes-BCD杯”职工羽毛球比赛/diodes_bcd_badmintion.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在工会的热心组织和同学们的大力支持下，我们微软代表队在这次的羽毛球比赛当中发挥出色，最后获
+    
+    </summary>
+    
+      <category term="羽毛球" scheme="http://xiaolianghuang.github.io/categories/%E7%BE%BD%E6%AF%9B%E7%90%83/"/>
+    
+    
+      <category term="微软紫竹" scheme="http://xiaolianghuang.github.io/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
+    
+      <category term="羽毛球" scheme="http://xiaolianghuang.github.io/tags/%E7%BE%BD%E6%AF%9B%E7%90%83/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>太尉志</title>
+    <link href="http://xiaolianghuang.github.io/2016/04/07/%E5%A4%AA%E5%B0%89%E5%BF%97/"/>
+    <id>http://xiaolianghuang.github.io/2016/04/07/太尉志/</id>
+    <published>2016-04-07T09:11:57.000Z</published>
+    <updated>2017-04-07T05:18:57.898Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/2016/04/07/太尉志/champion.jpg" alt=""></p>
+<p>诗曰: </p>
+<blockquote>
+<p>纷纷五代乱离间,<br>一旦云开复见天。<br>草木百年新雨露,<br>车书万里旧江山。</p>
+</blockquote>
+<p>话说这四句诗，乃是当今一个名儒所作，为叹当今天下互联网时代群雄逐鹿干戈不息的乱象。京城Redmond周围，近有Amazon，远有Google，Facebook，更远的远东大陆，还有BAT张牙舞爪，你争我夺，更有诸多公认的自认的英雄人物，召集了30个马仔就占山为王，欲与天公试比高，远不如当年太祖皇帝盖茨建立微软时候那般，各国之间划地为界，礼尚往来，安享太平。此人追随太祖皇帝盖茨入朝，可谓见证了整个计算机到互联网产业的兴起和转型，本来这天下大势就是合久必分分久必合，说多了也都是历史的必然，只不过与他看来，这故人回首，自然比那些个事不关己的看客们端坐在茶楼上谈笑风生要来感慨良多。</p>
+<p>话分两头，微软帝国历30年的时候，表面太平的天下，各股力量已经暗流涌动，太祖皇帝已经不理朝政，专心慈善事业，帝国二世继承人鲍尔默在位五年来，虽无大过，亦无大功，于是三世继承人就成了臣民关心的头等大事。大皇孙克洛普在京城Redmond呼风唤雨，并远赴诺基亚做最后的准备的时候，四皇孙纳德拉手上还没有太多的实权，元老院八大长老也没有他的心腹，只能去远东大陆开辟行省，韬光养晦。</p>
+<p>正所谓乱世出英雄，英雄出少年。在当时的中国古都西安，就有着这么一位翩翩少年，姓胥名志刚，号山姆，“生得身长七尺五寸，两耳垂肩，双手过膝”，二十岁出头，蹴鞠的功力已经出神入化，时常带着一个皮球在街头炫技，因此路人皆识得其名号。</p>
+<p>帝国历31年，四皇孙带着一众心腹四处招纳贤士，这一日，正来到西安街头，遇到山姆街头耍酷，看得入神时，楼上妇人失手掉下来一根竹竿，直直向四皇孙扎来，千钧一发之际，只见山姆脚底一踩，皮球应声而起，而后气聚丹田，一记大力金刚腿，将球踢向四皇孙头上的竹竿，险情随即化解，引来观众一片叫好。四皇孙虽然公务繁忙，然蹴鞠这一爱好却一直坚持，见此人力大无比，脚下更是粗中有细，又因为这一竹竿之恩，于是有有心扶持，招呼手下借一步说话。</p>
+<p>四皇孙一行人先行来到街角的快活林酒家，另遣侍从领着山姆上了楼梯，拐过弯来，便见到内厅酒桌端坐的四皇孙及左右随从。相互拜过，便入了席，酒过三巡，话说七分，却不见山姆动一下筷子，四皇孙便道：</p>
+<p>“壮士只是饮酒，不动碗筷，莫非嫌弃在下招待不周，亦或是无意出力辅佐？”</p>
+<p>山姆连忙让道：“非也非也，洒家只是久居西安，每次吃酒，不食其他，单单要这三十个肉夹馍，酒足饭饱，便睡他三天三夜。”</p>
+<p>于是叫来店家，吩咐需求，店家道“官人今日需是吃不得了”。</p>
+<p>山姆怒道：“这三十个肉夹馍，平日里也吃过，今日如何吃他不得？莫非洒家曾亏欠你肉钱面钱？”</p>
+<p>店家忙赔礼：“官人休要恼怒，小人见此几位大人异乡打扮，又是贵人面向，相比找官人是有要事相商，怕官人吃完困顿，贪睡误了正事”。</p>
+<p>四皇孙闻言大笑道“能食三十肉夹馍者，亦必有万夫不当之勇，旦吃无妨！”</p>
+<p>相谈既欢，此后又相约数回，至此视为心腹。四皇孙遂授以发展大计，留黄金万两，并随从一名为军师，辅佐山姆将来事业。</p>
+<p>微软帝国科技发家，纵建国已久，体制陈旧，然重专家之精神犹在，军师遂以帝国学者之名义，荐山姆之上海西南某高校，以谋求博士学位，为将来辅佐四皇孙铺平基础。自己则随行照顾，并授以天下大势。</p>
+<p>至帝国历35年，军师得四皇孙密报，帝国欲于紫竹建行省，并驻以重兵，地位之重，等同京城，得紫竹者得帝国也，不得有失。于是急赴山姆寝室，一一述说，劝其弃笔从戎，积累功绩，待行省建立之时，便是你我入主之日。</p>
+<p>然此时山姆醉心学术，不忍放弃：“此刻学业未竟，如若离开，愧对尊师栽培！”</p>
+<p>军师大怒：“太祖皇帝曾毕业乎？”</p>
+<p>于是山姆出走泰为（TeleNav），三年后，任总教头，统领八十万禁军。泰为者，太尉也，一人之下，万人之上。</p>
+<p>帝国历38年，紫竹行省筹建完毕，山姆领兵入关，身为ARD-MATL统帅，与ARD-MSEG，CSS-ASG，CSS-Platform，CSS-RDC&amp;DEV并称紫竹五虎，五虎各自为政，纵相安无事，但若行省无法统一，必难当大任，辅佐四皇孙。遂得皇孙之令，以己之长，攻他人之短，修球场，办蹴鞠联赛，以球场代沙场，一统行省。于是各路人马挑选精兵良将，日夜训练，以待开赛。</p>
+<p>首战对阵最强对手CSS-ASG，山姆亲自披挂，关键时刻助攻队友。次战，山姆状态更佳，3：1拿下ARD-MSEG，至此，四战已胜前二，行省总帅之位，已如囊中之物。至此，紫竹行省无人不知s山姆之名。</p>
+<p>军中亦流言四起，传当年修球场之时，球门下面挖出两块青石板，各刻着“遇山姆开”四个大字，挖开石板，底下却是一个万丈深浅地穴，一声巨响，恰似天催地踏，岳撼山崩。响亮过处，只见一道黑气，直冲到半天里，空中三座百十到金光，王四面八方散去。军师闻道，此气象，乃三十六天罡下临凡世，七十二地煞降临人间之兆，顺应天命，大事指日可成。</p>
+<p>得紫竹行省之后，山姆又继续招兵买马，扩大势力，于无锡，苏州建立行省，三足鼎立，权盖京都，成为四皇孙背后强力支持。</p>
+<p>帝国历39年，大皇孙并购诺基亚失利，四皇孙接任帝国。为表山姆之功，拜帝国胥公志刚太尉，军民讳其名号刚，遂变其音曰高太尉。并赐泰为营址。修行宫，赐御笔太尉府金匾。</p>
+<p>古有高俅以蹴鞠入庙堂，今有山姆借联赛定江山，历史更迭，命运重现，时也？命也？时人当局，难断其真意，唯有著述立传，留待后人评述。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/2016/04/07/太尉志/champion.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;诗曰: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;纷纷五代乱离间,&lt;br&gt;一旦云开复见天。&lt;br&gt;草木百年新雨露,&lt;br&gt;车书万里旧江山。&lt;/p&gt;
+&lt;/blockq
+    
+    </summary>
+    
+      <category term="声·色" scheme="http://xiaolianghuang.github.io/categories/%E5%A3%B0%C2%B7%E8%89%B2/"/>
+    
+    
+      <category term="微软紫竹" scheme="http://xiaolianghuang.github.io/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
+    
+      <category term="足球" scheme="http://xiaolianghuang.github.io/tags/%E8%B6%B3%E7%90%83/"/>
+    
+      <category term="春季联赛" scheme="http://xiaolianghuang.github.io/tags/%E6%98%A5%E5%AD%A3%E8%81%94%E8%B5%9B/"/>
+    
+      <category term="人物志" scheme="http://xiaolianghuang.github.io/tags/%E4%BA%BA%E7%89%A9%E5%BF%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>生命如歌</title>
+    <link href="http://xiaolianghuang.github.io/2015/05/15/%E7%94%9F%E5%91%BD%E5%A6%82%E6%AD%8C/"/>
+    <id>http://xiaolianghuang.github.io/2015/05/15/生命如歌/</id>
+    <published>2015-05-15T09:34:26.000Z</published>
+    <updated>2017-04-07T05:18:57.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>生命成为歌颂的对象，很多的时候，是出于对死亡的敬畏。同样，当一个故事以生命作为主题的时候，故事的背景里面，也通常会带着死亡的阴影。</p>
+<p>1994年，发生在卢旺达和布隆迪的种族大屠杀，是人类历史中不堪回首的一页。经济的落后，制度的失效，当年来自德国和比利时的殖民者扶植傀儡政权时对种族的强烈偏见，以及推广教育等时候对占据了人口大多数的胡图人的歧视，最终导致了胡图人和图西人之间不可调和的矛盾。当两国总统乘坐的专机在卢旺达首都被击落的时候，极端分子伺机而动，所有的图西人变成了报复的对象，而国际社会的袖手旁观则使这种报复行动彻底滑向罪恶的深渊，于是，四个月的时间里，一百万人头落地，那些握着粗陋砍刀的手和灵魂一起溅满鲜血。</p>
+<p>面对种族大屠杀的惨烈景象，负责非洲事务的白宫顾问苏珊·赖斯发下重誓：</p>
+<blockquote>
+<p>下次再遇上这种危机，哪怕烈火焚身下地狱，也要站在断然行动的一边！</p>
+</blockquote>
+<p>Tracy Kidder的这本《生命如歌》所记录的，正是在这样一个背景之下，从布隆迪的种族灭绝大屠杀中侥幸逃到美国的图西人德奥的故事。</p>
+<p>第一部分的《逃亡》，穿插讲述着德奥在祖国布隆迪和逃到美国以后逐渐安定下来的生活。第二部分《安息》里，作者则以一个记者的身份，描述和分析着德奥投身“健康同盟”的医疗工作，并返回家乡建设医院的生活和种种感受。</p>
+<p>布隆迪的一边，是贫穷残酷的生活现实，很小的时候，德奥就要翻山越岭去送货，上学迟到了，要自己带着树枝去受罚，病痛的折磨，还有爷爷嘴里殖民者对当地劳工的鞭打等等。但是在这些痛苦的背后，还有德奥妈妈和主教的话语做支撑：</p>
+<blockquote>
+<p>我让我所有的孩子都上学，这样就没人能瞧不起我没上过学。只要我的孩子们上学了，就算我上学了，因为我有受过良好教育的孩子。</p>
+<p>主教向他们讲述上帝，但是强调上帝要求人类要关爱自身，以及上帝要求优秀的青年学生为解决布隆迪的贫困和不公作出贡献–贫困有很多方式从身体蔓延到心灵。</p>
+</blockquote>
+<p>而随着德奥的长大，当“胡图人、图西人”这样的词，还有那些和种族矛盾相关的事情慢慢进入他的脑海中的时候，死亡的气息才真正的蔓延开来，等到德奥去医院实习，遭遇到94年那场种族灭绝的大屠杀的时候，整个国家，已经被死亡笼罩了。</p>
+<p>美国的一边，则是得到侥幸逃脱以后，在一个完全陌生语言不通的环境里生存下来的过程。在朋友的帮助下，德奥以咖啡商的身份逃到美国，但是去了以后，只能去杂货店打杂，睡在废弃的公寓和公园。但是在自己的努力，还有别人的帮助下，德奥却又重新进入学校，成为一名医生，并且开始和“健康同盟”这个组织中的其他人一起，用自己的力量帮助别人。</p>
+<p>经过那场灾难的人都是不幸的，但是德奥却又是那些不幸的人当中，十分幸运的，在国内，他得到那个胡图族妇女的帮助，躲过了杀身之祸，又在朋友的帮助下，逃到了美国，经历过最初的艰苦生活后，他又幸运了遇到了莎伦和查理南希夫妇，他们帮他找到住处，帮他完成学业，还帮他申请到美国公民身份，后来， 又遇到了《论传染病和不公平现象》的作者保罗法默医生，并从此开始了“健康同盟”的工作生涯。这些萍水相逢的人，在遇到德奥的时候，向他慷慨的伸出了援手。所以当德奥完成了自己的学业以后，同样地，也向着那些需要的人，伸出了自己的援手。</p>
+<p>关于布隆迪和卢旺达的那场大屠杀，有着太多的事情需要去讨论，殖民掠夺造成的严重后果，种族之间冲突升级的原因，对那些鼓动灾难的罪魁祸首的惩罚，国际社会的冷漠…也有着太多的事情需要去做，家园的重建，经济的发展，教育的普及，种族之间矛盾的化解，等等等等。这一切的实现，既需要政府和国际社会的合作，也需要民众的自觉自醒。而Tracy Kidder在《生命如歌》里所记录德奥的故事，则是通过这种贫民化的视角，让普通人，对于“种族灭绝大屠杀”这几个触目惊心的词有着更加近身的感受，同时，也借助德奥回到家乡的行动，在那些逐渐被尘封的历史、数字和争论当中间，放上一朵绽开的花朵，提醒这人们这残酷事件的另外一面。</p>
+<p>曾经看到过一个报道，一个乞讨的老人，身上破破烂烂，步履蹒跚，却一下子将所有的“积蓄”捐给了地震的灾民。经历过惨淡的人生，他对于痛苦的体会更加的深刻，所以对灾难的感同身受，也更加的强烈。</p>
+<p>这种源自内心的感同身受，也正是鼓励支持德奥到“健康同盟”工作，返回家乡建设医院医治穷人的动力所在：</p>
+<blockquote>
+<p>他确实想过放弃所有的家庭责任，甚至舍弃亲情，在这个世界上当一个无牵无挂的“孤家寡人”，和过去的生活一道两段，管道纽约的头几个月里他也确实尝试过这么做，但是根本行不通–这样做比承担起那些责任更要痛苦，毕竟，这是生我养我的地方。</p>
+</blockquote>
+<p>不管是赖斯代表着政府态度的重誓，还是德奥个人身份的“微小”贡献，那些外人看来高尚或者坚定的人格，回归到个体，也许只是源于内心那最初的感动。正如《生命如歌》前面所引用的那首诗里所说的一样:</p>
+<blockquote>
+<p>最初的感动，依稀存在于摆脱痛苦的慰藉中，信仰超越了死亡，岁月沉淀了从容。</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;生命成为歌颂的对象，很多的时候，是出于对死亡的敬畏。同样，当一个故事以生命作为主题的时候，故事的背景里面，也通常会带着死亡的阴影。&lt;/p&gt;
+&lt;p&gt;1994年，发生在卢旺达和布隆迪的种族大屠杀，是人类历史中不堪回首的一页。经济的落后，制度的失效，当年来自德国和比利时的殖民者扶
+    
+    </summary>
+    
+      <category term="阅读·悦读" scheme="http://xiaolianghuang.github.io/categories/%E9%98%85%E8%AF%BB%C2%B7%E6%82%A6%E8%AF%BB/"/>
+    
+    
+      <category term="书评" scheme="http://xiaolianghuang.github.io/tags/%E4%B9%A6%E8%AF%84/"/>
+    
+      <category term="阅读·悦读" scheme="http://xiaolianghuang.github.io/tags/%E9%98%85%E8%AF%BB%C2%B7%E6%82%A6%E8%AF%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2014生死有命 富贵在天杯羽毛球邀请赛年度总决赛</title>
+    <link href="http://xiaolianghuang.github.io/2014/12/21/2014%E7%94%9F%E6%AD%BB%E6%9C%89%E5%91%BD-%E5%AF%8C%E8%B4%B5%E5%9C%A8%E5%A4%A9%E6%9D%AF%E7%BE%BD%E6%AF%9B%E7%90%83%E9%82%80%E8%AF%B7%E8%B5%9B%E5%B9%B4%E5%BA%A6%E6%80%BB%E5%86%B3%E8%B5%9B/"/>
+    <id>http://xiaolianghuang.github.io/2014/12/21/2014生死有命-富贵在天杯羽毛球邀请赛年度总决赛/</id>
+    <published>2014-12-21T13:14:40.000Z</published>
+    <updated>2017-04-07T05:18:57.751Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>微软紫竹撤藩记</title>
+    <link href="http://xiaolianghuang.github.io/2011/08/30/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9%E6%92%A4%E8%97%A9%E8%AE%B0/"/>
+    <id>http://xiaolianghuang.github.io/2011/08/30/微软紫竹撤藩记/</id>
+    <published>2011-08-30T10:07:07.000Z</published>
+    <updated>2017-04-07T05:18:57.915Z</updated>
+    
+    <content type="html"><![CDATA[<p>江山代有人才出，各领风骚数百年，至二十世纪末，微软帝国崛起，雄霸西方，太祖皇帝盖茨意气风发，欲进驻中原以后快。</p>
+<p>时有汉人唐骏，曾留学西洋，洞悉时局，归国后，自筹兵马粮草，里应外合，引微软进关入沪，于紫竹修科技园，安营扎寨，休养生息。唐骏居功至伟，封少保。</p>
+<p>数年后，Google、Amazon 北方崛起，终日骚扰边界，数次交战，帝国损兵折将，民生凋敝，互联网各公司亦饱受困扰，于是签订协议，停战熄火。</p>
+<p>其间，唐少保借远战场之利，大举扩张，广备粮草，家中食客，数以百计。终于功高盖主。太祖皇帝欲去之而后快，然访群臣，不得其法。</p>
+<p>数月后，伶人韦小宝觐见，欲献除少保之计。太祖疑惑：满朝文武皆无对策，汝伶人奈之何？小宝复进书，计不施，愿以命抵之。太祖遂诏小宝入御书房，面询技艺。</p>
+<p>“小宝出生卑微，乃风月女子之后，少年随家母奔走西洋，往来于各大院校之间，曾寄留野鸡大学，遂识得唐少保。帝国官员，好功名而重出身，汤少保位高权重，然出身卑微，遂遣史官修改履历，伪造文凭。以此要挟，少保必自退位。”</p>
+<p>不日，野鸡大学门爆发，不费一兵一卒，不伤一草一木，太祖心头患去之。赏小宝万贯家财，并赐婚建宁。</p>
+<p>少保既除，朝中太平。然紫竹偏远，少保心腹割据边疆，平西王DevDiv镇守西北，西邻悬崖，背靠要道，近食堂而临运动场，易守难攻。平北王HPC兵临都城，居高临下。靖南王ADX手持重兵，镇守南疆要道，人称三藩。</p>
+<p>太祖欲一并铲除，小宝进言阻之：太祖年事以高，不宜远征，阿哥尚未成年，难当大任，我朝与北方蛮夷交战数载，人疲马乏。三王虽各据一方，然与民无扰，且连年进贡，陛下当休养生息，远征之事，再议不迟。</p>
+<p>时有八阿哥CTP，年幼而有大志，愿亲赴中原，以解太祖之忧。小宝钦其志，请同往，太祖准。</p>
+<p>八阿哥初到中原，不问政事，终日游戏人间，发展Xbox，在线支付之事宜。三藩见此，大喜：小子不足为惧也。八阿哥不动声色，暗中招兵买马，培养心腹，又选身强力壮子弟50余人为 Intern。</p>
+<p>数月，FY11财报出，CTP夺增长率之冠，惊三藩。平西王欲查究竟，借庆贺之名，入阿哥府，至大堂，Intern尽出，擒之。</p>
+<p>平西王被擒，三藩群龙无首，是时，太祖皇帝宣召，三藩割据，乃少保之祸，少保既除，平西王亦被擒，各路藩王若肯告老，朝廷既往不咎，并赐万贯家财，颐养天年。其余部下，收编八阿哥麾下，俸禄职位不变。平西王势力庞大，为免后患，拆分其部，具体事宜，听由八阿哥定夺。至此，紫竹为八阿哥独断。</p>
+<p>正是“除少保，韦小宝出神奇一招，撤三藩，八阿哥显帝王之相”。</p>
+<p>然内忧虽平，外困犹在，太祖退位，新皇稚嫩，帝国复苏，任重而道远！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;江山代有人才出，各领风骚数百年，至二十世纪末，微软帝国崛起，雄霸西方，太祖皇帝盖茨意气风发，欲进驻中原以后快。&lt;/p&gt;
+&lt;p&gt;时有汉人唐骏，曾留学西洋，洞悉时局，归国后，自筹兵马粮草，里应外合，引微软进关入沪，于紫竹修科技园，安营扎寨，休养生息。唐骏居功至伟，封少保。&lt;/p
+    
+    </summary>
+    
+      <category term="声·色" scheme="http://xiaolianghuang.github.io/categories/%E5%A3%B0%C2%B7%E8%89%B2/"/>
+    
+    
+      <category term="微软紫竹" scheme="http://xiaolianghuang.github.io/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
+    
+      <category term="历史" scheme="http://xiaolianghuang.github.io/tags/%E5%8E%86%E5%8F%B2/"/>
+    
+      <category term="足球" scheme="http://xiaolianghuang.github.io/tags/%E8%B6%B3%E7%90%83/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>《史记》之欧洲冠军联赛篇（序）</title>
+    <link href="http://xiaolianghuang.github.io/2009/07/03/%E3%80%8A%E5%8F%B2%E8%AE%B0%E3%80%8B%E4%B9%8B%E6%AC%A7%E6%B4%B2%E5%86%A0%E5%86%9B%E8%81%94%E8%B5%9B%E7%AF%87%EF%BC%88%E5%BA%8F%EF%BC%89/"/>
+    <id>http://xiaolianghuang.github.io/2009/07/03/《史记》之欧洲冠军联赛篇（序）/</id>
+    <published>2009-07-03T14:51:20.000Z</published>
+    <updated>2017-04-07T05:18:57.883Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/2009/07/03/《史记》之欧洲冠军联赛篇（序）/champions_league.jpg" alt=""></p>
+<p>天下大势，分久必合，合久必分。至二十世纪末，正是将分为分之时。欧洲大陆，五个国家，二十支俱乐部遮天。绿茵场上，战火不断，硝烟弥漫，群雄割据，此消彼长。</p>
+<p>遂办欧洲冠军联赛，以行各国球会切磋交流之便宜。此后十数载，相安无事。至普拉蒂尼，大施新政，欲集全欧洲之财力，正宇宙第一联赛之虚名。君子见利，亦有失之以义者，而况于欧洲之蛮夷乎？遂有各路豪强大兴土木，招兵买马。不数年，球场林立，新星云集。</p>
+<p>至于公元二零零九之春，有西甲豪门巴萨罗纳，于欧洲赛场纵横驰骋，虽入四强时独占三英而面无惧色。拥梅西，亨利，埃托三叉戟，凭哈维小白中场控制之力，又有普队坐镇后防，巴尔德斯稳守龙门。先补时斩切尔西于斯坦福桥，又决赛力克红魔于罗马，终成三冠王之伟业，压宿敌马德里于脚下。</p>
+<p>是时，马德里虽地广兵多，然数年来奸臣当道，政事荒废，后虽欲图强，终力所不能及，历征欧陆而皆为英超所败，而后，又以二比六失国家德比，丢传统而失历史，以致球迷震怒，高层动荡。</p>
+<p>时有重臣弗洛伦蒂诺，于数年前组银河舰队，耗举国之资而寸功未立，为先帝所废，念其年迈，故免于肉刑，发配边疆，令其世代经商，捐所得以赎当年之过。</p>
+<p>然此人生性奸诈，蒙先帝之恩而不知悔悟，结党营私，欺民霸市，不多年，竟成一方霸主。借此动荡之时，以辅政之名义，重回马德里，挟天子以令诸侯，大举任用亲信，先废拉莫斯而代之以佩莱格里尼，后斥巨资，招卡卡，西罗，本泽马于麾下，并拜小齐为军师，又遣马仔数百人，奔走于各地，造谣言以散之，哄抬物价，惊扰民心。一夜之间，洛阳纸贵，致使民不聊生，怨声载道。</p>
+<p>于是有英、意、西、德、法各路诸侯联名而反，又有霍芬海姆、波尔图等草根揭竿而起，群雄逐鹿，天下大乱。</p>
+<p>余乃一介书生，无奈生于乱世，又无孟德命世之才，颠沛流离之中，睹万民之苦而无力以救，唯有著书记之，以警后世之人。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/2009/07/03/《史记》之欧洲冠军联赛篇（序）/champions_league.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;天下大势，分久必合，合久必分。至二十世纪末，正是将分为分之时。欧洲大陆，五个国家，二十支俱乐部遮天。绿茵场上，战火不断，硝烟
+    
+    </summary>
+    
+      <category term="声·色" scheme="http://xiaolianghuang.github.io/categories/%E5%A3%B0%C2%B7%E8%89%B2/"/>
+    
+    
+      <category term="足球" scheme="http://xiaolianghuang.github.io/tags/%E8%B6%B3%E7%90%83/"/>
+    
+      <category term="欧冠" scheme="http://xiaolianghuang.github.io/tags/%E6%AC%A7%E5%86%A0/"/>
+    
+  </entry>
+  
+</feed>
