@@ -37,7 +37,9 @@
 <meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_reset_commit_parameters.png">
 <meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/reset_vs_revert.png">
 <meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_checkout.png">
-<meta property="og:updated_time" content="2017-04-08T05:38:09.080Z">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/submodule.png">
+<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_submodule_add.png">
+<meta property="og:updated_time" content="2017-04-08T07:42:15.990Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git版本控制">
 <meta name="twitter:description" content="Git 概览下面这张图是根据自己理解画出来的关于git的一个大概的知识框架图，分别从版本控制的发展,Git的优点,原理和使用的角度队涉及到的知识进行了一个梳理, 最后还有一些遇到过的小问题或者是Tip的总结.  版本控制的发展和历史虽然只有几十年的时间, 但是版本控制已经有着几代的更新,最近几年,Git的发展则出现了一统江湖的局面。仔细想想，除了Git本身的优点之外，存储空间和网络速度的发展，也使">
@@ -148,7 +150,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Git-概览"><span class="toc-number">1.</span> <span class="toc-text">Git 概览</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#版本控制的发展和历史"><span class="toc-number">1.1.</span> <span class="toc-text">版本控制的发展和历史</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Git的原理和实现机制"><span class="toc-number">2.</span> <span class="toc-text">Git的原理和实现机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式的版本控制系统"><span class="toc-number">2.1.</span> <span class="toc-text">分布式的版本控制系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#保存修改文件的-snapshot-而不是增量"><span class="toc-number">2.2.</span> <span class="toc-text">保存修改文件的 snapshot 而不是增量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工作区，-暂存区-和-Git仓库"><span class="toc-number">2.3.</span> <span class="toc-text">工作区， 暂存区 和 Git仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git文件的状态和迁移"><span class="toc-number">2.4.</span> <span class="toc-text">Git文件的状态和迁移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rollback-Clean，Reset-Checkout-Revert的使用"><span class="toc-number">2.5.</span> <span class="toc-text">Rollback: Clean，Reset, Checkout, Revert的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#作用域"><span class="toc-number">2.5.1.</span> <span class="toc-text">作用域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要-Scenarios"><span class="toc-number">2.5.2.</span> <span class="toc-text">主要 Scenarios</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#gt-Rollback-from-Create-Not-yet-Add"><span class="toc-number">2.5.2.1.</span> <span class="toc-text">> Rollback from Create (Not yet Add)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gt-Rollback-from-Add"><span class="toc-number">2.5.2.2.</span> <span class="toc-text">> Rollback from Add</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gt-Rollback-from-Commit"><span class="toc-number">2.5.2.3.</span> <span class="toc-text">> Rollback from Commit</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#–-文件层面的-reset-操作"><span class="toc-number">2.5.2.3.1.</span> <span class="toc-text">– 文件层面的 reset 操作</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#–-Commit-层面的-reset-操作"><span class="toc-number">2.5.2.3.2.</span> <span class="toc-text">– Commit 层面的 reset 操作</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#–-通过-revert-来进行-commit-层面的rollback"><span class="toc-number">2.5.2.3.3.</span> <span class="toc-text">– 通过 revert 来进行 commit 层面的rollback</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gt-Rollback-from-Branch"><span class="toc-number">2.5.2.4.</span> <span class="toc-text">> Rollback from Branch</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Merge-on-Conflict"><span class="toc-number">2.5.3.</span> <span class="toc-text">Merge on Conflict</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#引用：-Submodule"><span class="toc-number">2.5.4.</span> <span class="toc-text">引用： Submodule</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git的内部实现"><span class="toc-number">2.6.</span> <span class="toc-text">Git的内部实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paging-分页器"><span class="toc-number">2.7.</span> <span class="toc-text">Paging 分页器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips"><span class="toc-number">3.</span> <span class="toc-text">Tips</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Config-Git–局部设置与全局设置"><span class="toc-number">3.1.</span> <span class="toc-text">Config Git–局部设置与全局设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#局部设置"><span class="toc-number">3.1.1.</span> <span class="toc-text">局部设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全局设置"><span class="toc-number">3.1.2.</span> <span class="toc-text">全局设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git-在-windows-下中文乱码"><span class="toc-number">3.2.</span> <span class="toc-text">Git 在 windows 下中文乱码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rerence"><span class="toc-number">4.</span> <span class="toc-text">Rerence</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Git-概览"><span class="toc-number">1.</span> <span class="toc-text">Git 概览</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#版本控制的发展和历史"><span class="toc-number">1.1.</span> <span class="toc-text">版本控制的发展和历史</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Git的原理和实现机制"><span class="toc-number">2.</span> <span class="toc-text">Git的原理和实现机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式的版本控制系统"><span class="toc-number">2.1.</span> <span class="toc-text">分布式的版本控制系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#保存修改文件的-snapshot-而不是增量"><span class="toc-number">2.2.</span> <span class="toc-text">保存修改文件的 snapshot 而不是增量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工作区，-暂存区-和-Git仓库"><span class="toc-number">2.3.</span> <span class="toc-text">工作区， 暂存区 和 Git仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git文件的状态和迁移"><span class="toc-number">2.4.</span> <span class="toc-text">Git文件的状态和迁移</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Git的一些使用经验"><span class="toc-number">3.</span> <span class="toc-text">Git的一些使用经验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Rollback-Clean，Reset-Checkout-Revert的使用"><span class="toc-number">3.1.</span> <span class="toc-text">Rollback: Clean，Reset, Checkout, Revert的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#作用域"><span class="toc-number">3.1.1.</span> <span class="toc-text">作用域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要-Scenarios"><span class="toc-number">3.1.2.</span> <span class="toc-text">主要 Scenarios</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Rollback-from-Create"><span class="toc-number">3.1.2.1.</span> <span class="toc-text">Rollback from Create</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rollback-from-Add"><span class="toc-number">3.1.2.2.</span> <span class="toc-text">Rollback from Add</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rollback-from-Commit"><span class="toc-number">3.1.2.3.</span> <span class="toc-text">Rollback from Commit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rollback-from-Branch"><span class="toc-number">3.1.2.4.</span> <span class="toc-text">Rollback from Branch</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Merge-on-Conflict"><span class="toc-number">3.1.3.</span> <span class="toc-text">Merge on Conflict</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Git里面的Submodule"><span class="toc-number">3.1.4.</span> <span class="toc-text">Git里面的Submodule</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#添加一个submodule"><span class="toc-number">3.1.4.1.</span> <span class="toc-text">添加一个submodule</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Repository里面有submodule的时候，如何clone"><span class="toc-number">3.1.4.2.</span> <span class="toc-text">Repository里面有submodule的时候，如何clone</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新一个submodule"><span class="toc-number">3.1.5.</span> <span class="toc-text">更新一个submodule</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除一个submodule"><span class="toc-number">3.1.6.</span> <span class="toc-text">删除一个submodule</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paging-分页器"><span class="toc-number">3.2.</span> <span class="toc-text">Paging 分页器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tips"><span class="toc-number">4.</span> <span class="toc-text">Tips</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Config-Git–局部设置与全局设置"><span class="toc-number">4.1.</span> <span class="toc-text">Config Git–局部设置与全局设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#局部设置"><span class="toc-number">4.1.1.</span> <span class="toc-text">局部设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全局设置"><span class="toc-number">4.1.2.</span> <span class="toc-text">全局设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git-在-windows-下中文乱码"><span class="toc-number">4.2.</span> <span class="toc-text">Git 在 windows 下中文乱码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rerence"><span class="toc-number">5.</span> <span class="toc-text">Rerence</span></a></li></ol>
   </div>
 
 
@@ -215,26 +217,29 @@
 <div align="center"><br><img src="/2017/03/23/Git版本控制/git_status_vscode.png" width="70%" align="center"><br></div>
 
 <p>但是使用命令行仍然是Git最主要和最为方便的模式,因此当你使用了一段时间的Git以后，使用 <em>git status -s</em> 命令查看文件的状态，并且清晰的知道其所在的位置（工作区，暂存区和git repository），和可能的状态转移，以及使用什么命令进行操作，就非常的重要了。这也是区别知道git和真正会用git的很重要一点。</p>
-<h2 id="Rollback-Clean，Reset-Checkout-Revert的使用"><a href="#Rollback-Clean，Reset-Checkout-Revert的使用" class="headerlink" title="Rollback: Clean，Reset, Checkout, Revert的使用"></a>Rollback: Clean，Reset, Checkout, Revert的使用</h2><p>最初的时候，我们的在git里面对文件的操作都是正向的，也就是 add/commit/push 这些命令，如果有问题，也可以通过修改以后再次提交的方法进行覆盖。但是在管理很多的code的时候，这样人肉的方法就会显得效率很低。</p>
+<h1 id="Git的一些使用经验"><a href="#Git的一些使用经验" class="headerlink" title="Git的一些使用经验"></a>Git的一些使用经验</h1><h2 id="Rollback-Clean，Reset-Checkout-Revert的使用"><a href="#Rollback-Clean，Reset-Checkout-Revert的使用" class="headerlink" title="Rollback: Clean，Reset, Checkout, Revert的使用"></a>Rollback: Clean，Reset, Checkout, Revert的使用</h2><p>最初的时候，我们的在git里面对文件的操作都是正向的，也就是 add/commit/push 这些命令，如果有问题，也可以通过修改以后再次提交的方法进行覆盖。但是在管理很多的code的时候，这样人肉的方法就会显得效率很低。</p>
 <p>作为版本控制的系统，Git其实已经提供了丰富的命令来支持rollback的操作， 有<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git clean</div><div class="line"><span class="variable">$ </span>git reset</div><div class="line"><span class="variable">$ </span>git checkout</div><div class="line"><span class="variable">$ </span>git revert</div></pre></td></tr></table></figure></p>
 <h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>Reset/Checkout 命令可以支持在文件level和commit的level进行操作，参数当中是否包含文件路径决定了这些操作是对文件还是对commit有效。</p>
 <h3 id="主要-Scenarios"><a href="#主要-Scenarios" class="headerlink" title="主要 Scenarios"></a>主要 Scenarios</h3><p>下面以基本scenario为例，来看看reset操作怎么满足我们rollback的需求。</p>
 <p>前面提到过，Git 主要有三个部分组成（不考虑 remote repository）： Workspace，Staging Area 和 Repository。当文件处于他们当中不同的位置（对应不同的状态）的时候，通过对于的操作都可以进行rollback， 以文件123.txt 为例：</p>
-<h4 id="gt-Rollback-from-Create-Not-yet-Add"><a href="#gt-Rollback-from-Create-Not-yet-Add" class="headerlink" title="&gt; Rollback from Create (Not yet Add)"></a>&gt; Rollback from Create (Not yet Add)</h4><p>这个时候，文件的状态是 unstaged/untracked， 只是在本地有一个文件而已，要进行删除的话，使用 git clean 命令。<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git clean <span class="_">-f</span></div></pre></td></tr></table></figure></p>
+<h4 id="Rollback-from-Create"><a href="#Rollback-from-Create" class="headerlink" title="Rollback from Create"></a>Rollback from Create</h4><p>这个时候，文件的状态是 unstaged/untracked， 只是在本地有一个文件而已，要进行删除的话，使用 git clean 命令。<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git clean <span class="_">-f</span></div></pre></td></tr></table></figure></p>
 <p>主要的参数有 d/n/f：<br><figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby"><span class="symbol">d:</span> 同时删除untracked的目录</span></div><div class="line">-<span class="ruby"><span class="symbol">n:</span> 显示将会做什么，但是不会真的删除文件</span></div><div class="line">-<span class="ruby">f：force， 最终删除文件</span></div></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="/2017/03/23/Git版本控制/git_clean_bash.png" width="70%" align="center"><br></div>
 
 <p>要特别提出的是<a href="">-n</a> 这个参数，会用 <em>“would remove”</em> 提示你将会进行的操作供你检验，但是文件并不会真的被删除<br><figure class="highlight maxima"><table><tr><td class="code"><pre><div class="line">$ git clean -nf <span class="built_in">reset</span>.txt</div><div class="line">Would <span class="built_in">remove</span> <span class="built_in">reset</span>.txt</div></pre></td></tr></table></figure></p>
 <p>更详细的内容可以参考 <a href="">git clean –help</a></p>
-<h4 id="gt-Rollback-from-Add"><a href="#gt-Rollback-from-Add" class="headerlink" title="&gt; Rollback from Add"></a>&gt; Rollback from Add</h4><p>如果文件已经使用 git add, 那么文件的状态就是 stacked/modifed, 要把文件从staging area里面去掉，就需要使用 git reset 命令</p>
+<h4 id="Rollback-from-Add"><a href="#Rollback-from-Add" class="headerlink" title="Rollback from Add"></a>Rollback from Add</h4><p>如果文件已经使用 git add, 那么文件的状态就是 stacked/modifed, 要把文件从staging area里面去掉，就需要使用 git reset 命令</p>
 <figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git reset <span class="number">123</span>.txt</div></pre></td></tr></table></figure>
 <div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
 
 <p>这时候文件就会从staging area里面删掉，然后恢复到workspace。<br>reset 命令还有一些参数来控制rollback的效果，比如说到workspace还是staging area，但是只在只对commit的时候才有用，就放到下面一节描述了。</p>
 <p>Rest 到 workspace以后，如果要继续删除，就像上面说的那样，使用 git clean 命令就可以了。</p>
-<h4 id="gt-Rollback-from-Commit"><a href="#gt-Rollback-from-Commit" class="headerlink" title="&gt; Rollback from Commit"></a>&gt; Rollback from Commit</h4><p>如果文件已经用 git commit 提交到repository, 那么文件的状态就是 stacked/modifed, 要把文件从staging area里面去掉，就需要使用 git reset 命令。</p>
+<h4 id="Rollback-from-Commit"><a href="#Rollback-from-Commit" class="headerlink" title="Rollback from Commit"></a>Rollback from Commit</h4><p>如果文件已经用 git commit 提交到repository, 那么文件的状态就是 stacked/modifed, 要把文件从staging area里面去掉，就需要使用 git reset 命令。</p>
 <p>前面提到过作用域的问题，reset命令后面是不是带有文件名，将会决定这个rollback操作影响的对象是一个文件还是一整个commit（可以包含多个文件修改）</p>
-<h5 id="–-文件层面的-reset-操作"><a href="#–-文件层面的-reset-操作" class="headerlink" title="– 文件层面的 reset 操作"></a>– 文件层面的 reset 操作</h5><p>如下所示，如果reset命令后面带有具体的路径，那么commit里面与这个路径/文件不相关的文件就不会被影响。</p>
+<blockquote>
+<p><strong>1. 文件层面的 reset 操作</strong></p>
+</blockquote>
+<p>如下所示，如果reset命令后面带有具体的路径，那么commit里面与这个路径/文件不相关的文件就不会被影响。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ git <span class="keyword">reset</span> <span class="keyword">head</span>^ <span class="number">123.</span>txt</div></pre></td></tr></table></figure>
 <div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
 
@@ -246,7 +251,10 @@
 <figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">HEAD 参数：</div><div class="line"></div><div class="line">然后我们注意到，对<span class="keyword">Commit</span>进行<span class="keyword">rollback</span>操作的时候，有个 <span class="keyword">head</span> 的参数，后面还带有^或者是~<span class="number">2</span>这样的符号, 这个参数表明的是<span class="keyword">rollback</span>到哪个<span class="keyword">commit</span>。 <span class="keyword">HEAD</span>其实是一个指针（Git内部结构里面会讲到），指向当前最新的<span class="keyword">commit</span>, <span class="keyword">head</span>^表示的是<span class="keyword">parent</span>，也就是上一个<span class="keyword">commit</span>，<span class="keyword">head</span>^^这是表示再早一个的<span class="keyword">commit</span>。当需要<span class="keyword">rollback</span>到更早的<span class="keyword">commit</span>的时候，则需要使用~n的表示方法，所以<span class="keyword">head</span>^ 跟 <span class="keyword">head</span>~<span class="number">1</span>是等价的。</div></pre></td></tr></table></figure>
 <p>要查看head或者head^对应的commit，运行下面的命令就可以了<br><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ git <span class="keyword">show</span> <span class="keyword">head</span></div></pre></td></tr></table></figure></p>
 <p>然后还要说明的是，当repository里面只包含一个commit的时候，这个reset命令其实是不起作用的，因为HEAD再往前找不到更早的commit了。但是这个时候因为只有一个commit，reset相当于重新init一个git，所以也并没有关系。</p>
-<h5 id="–-Commit-层面的-reset-操作"><a href="#–-Commit-层面的-reset-操作" class="headerlink" title="– Commit 层面的 reset 操作"></a>– Commit 层面的 reset 操作</h5><p>当通过reset来rollback整个commit的时候，其作用域就是所有包含在commit里面的文件。下面的例子说明了两个文件时候的情况。</p>
+<blockquote>
+<p><strong>2. Commit 层面的 reset 操作</strong></p>
+</blockquote>
+<p>当通过reset来rollback整个commit的时候，其作用域就是所有包含在commit里面的文件。下面的例子说明了两个文件时候的情况。</p>
 <div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_commit.png" width="70%" align="center"><br></div>
 
 <p>可以看到，commit过的两个文件都被放回到了staging area里面，变成modified的状态了。</p>
@@ -255,26 +263,68 @@
 <figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">-soft – 缓存区和工作目录都不会被改变</span></div><div class="line">-<span class="ruby">-mixed – 默认选项。缓存区和你指定的提交同步，但工作目录不受影响</span></div><div class="line">-<span class="ruby">-hard – 缓存区和工作目录都同步到你指定的提交</span></div></pre></td></tr></table></figure>
 <div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_commit_parameters.png" width="60%" align="center"><br></div>
 
-<h5 id="–-通过-revert-来进行-commit-层面的rollback"><a href="#–-通过-revert-来进行-commit-层面的rollback" class="headerlink" title="– 通过 revert 来进行 commit 层面的rollback"></a>– 通过 revert 来进行 commit 层面的rollback</h5><p>除了 Reset 之外， git 还提供了一个命令 Revert 来进行rollback的操作，但是不同的是， Revert 命令不会往前移动 HEAD，而是会把修改当成一个新的commit 附加在原先的 HEAD 后面，并且移动 HEAD 到最新的 commit。</p>
+<blockquote>
+<p><strong>3. 通过 revert 来进行 commit 层面的rollback</strong></p>
+</blockquote>
+<p>除了 Reset 之外， git 还提供了一个命令 Revert 来进行rollback的操作，但是不同的是， Revert 命令不会往前移动 HEAD，而是会把修改当成一个新的commit 附加在原先的 HEAD 后面，并且移动 HEAD 到最新的 commit。</p>
 <div align="center"><br><img src="/2017/03/23/Git版本控制/reset_vs_revert.png" width="80%" align="center"><br></div>
 
 
-<h4 id="gt-Rollback-from-Branch"><a href="#gt-Rollback-from-Branch" class="headerlink" title="&gt; Rollback from Branch"></a>&gt; Rollback from Branch</h4><p>方便的 branch 分支管理是 Git 的一个重要特点，通过新建branch，可以针对一个feature进行独立开发，也可以很容易的在几个人之前share 临时的change （SD 里面可能就需要通过dpk打包之类的方式来实现）。</p>
+<h4 id="Rollback-from-Branch"><a href="#Rollback-from-Branch" class="headerlink" title="Rollback from Branch"></a>Rollback from Branch</h4><p>方便的 branch 分支管理是 Git 的一个重要特点，通过新建branch，可以针对一个feature进行独立开发，也可以很容易的在几个人之前share 临时的change （SD 里面可能就需要通过dpk打包之类的方式来实现）。</p>
 <p>所以checkout 应该是使用频率仅次于add/commit/push/pull 的命令了，当传入分支名时，可以切换到那个分支。<br><figure class="highlight ebnf"><table><tr><td class="code"><pre><div class="line"><span class="attribute">git checkout hotfix</span></div></pre></td></tr></table></figure></p>
 <p>上面这个命令做的不过是将HEAD移到一个新的分支，然后更新工作目录。因为这可能会覆盖本地的修改，Git强制你提交或者缓存工作目录中的所有更改，不然在checkout的时候这些更改都会丢失。和git reset不一样的是，git checkout没有移动这些分支。</p>
 <p>下面这张图说明了 checkout 的使用效果。</p>
 <div align="center"><br><img src="/2017/03/23/Git版本控制/git_checkout.png" width="60%" align="center"><br></div>
 
 <p>这一章节总结了git里面rollback相关的主要scenario和相关的解决办法，关于rollback 还有更多细致的分析和别的操作方法，比如checkout到某个commit，以及关于rollback时候，git内部结构的变化，可以参考<a href="https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-代码回滚%EF%BC%9AReset、Checkout、Revert的选择" target="_blank" rel="external">代码回滚：Reset、Checkout、Revert的选择</a></p>
-<h3 id="Merge-on-Conflict"><a href="#Merge-on-Conflict" class="headerlink" title="Merge on Conflict"></a>Merge on Conflict</h3><h3 id="引用：-Submodule"><a href="#引用：-Submodule" class="headerlink" title="引用： Submodule"></a>引用： Submodule</h3><p>submodule 是git里面repository层面进行引用的一种方式, 比如说你的project里面引用到了别人同时开发的另外一个project, 然后大家可以同步更新又保持相互的独立。其作用有点像VS solution里面，project之间的相互引用关系，如果一个修改同时涉及到几个project，那这种方式就会比较方便。</p>
+<hr>
+<h3 id="Merge-on-Conflict"><a href="#Merge-on-Conflict" class="headerlink" title="Merge on Conflict"></a>Merge on Conflict</h3><hr>
+<h3 id="Git里面的Submodule"><a href="#Git里面的Submodule" class="headerlink" title="Git里面的Submodule"></a>Git里面的Submodule</h3><p>submodule 是git里面repository层面进行引用的一种方式, 比如说你的project里面引用到了别人同时开发的另外一个project, 然后大家可以同步更新又保持相互的独立。其作用有点像VS solution里面，project之间的相互引用关系，如果一个修改同时涉及到几个project，那这种方式就会比较方便。</p>
 <p>从project层面来说，进行引用一般有三种方式：</p>
+<blockquote>
 <ol>
-<li>合并代码到一起，这样的好处是都可见，但是相互独立性就没那么好了，而且solution会变得很庞大</li>
+<li>合并代码到一起，这样的好处是都可见，但是相互独立性就没那么好了，而且solution会变得很庞大。</li>
 <li>通过nuget package之类的方式完全独立起来，只引用稳定release的版本，这样的好处是独立，方便，但是可能没办法同时进行相关的修改。</li>
-<li>通过project来进行引用，保持相互的独立的同时，能够在需要的时候进行同时的开发修改</li>
+<li>通过project来进行引用，保持相互的独立的同时，能够在需要的时候进行同时的开发修改。</li>
 </ol>
-<p>就像visual studio里面, 对于另外一个project</p>
-<h2 id="Git的内部实现"><a href="#Git的内部实现" class="headerlink" title="Git的内部实现"></a>Git的内部实现</h2><h2 id="Paging-分页器"><a href="#Paging-分页器" class="headerlink" title="Paging 分页器"></a>Paging 分页器</h2><p>这部分内容摘自 <a href="http://gotgit.readthedocs.io/en/latest/01-meet-git/020-love-git.html#git" target="_blank" rel="external">爱上Git的理由</a></p>
+</blockquote>
+<p>Git 里面的submodule就是类似于第三种的模式，通过一种link的模式将其他的repository引用进来。需要的时候，进行更新。需要说明的是：</p>
+<blockquote>
+<ol>
+<li>Git的submodule在外层引用者的remote repository里面，只是一个空文件夹形式存在的空文件夹。但是在本地，还是需要将submodule repository的内容同步下来。</li>
+<li>Submodule可以跨service完全独立开来，只要是基于git并且拥有访问权限，比如说，通过Github引用一个gitcafe的项目。</li>
+</ol>
+</blockquote>
+<p>下面展示了Hexo Repository里面，通过submodule形式引用fexo主题时候，github上面repository的结构</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/submodule.png" width="80%" align="center"><br></div>
+
+<p>利用submodule，就可以将第三方的fexo主题跟我自己的hexo项目分开进行管理了。</p>
+<p>在解释了submodule是什么以后，下面介绍一下submodule的使用，包括：</p>
+<blockquote>
+<ul>
+<li>如何添加一个submodule、</li>
+<li>Repository里面有submodule的时候，如何clone</li>
+<li>如何更新submodule</li>
+<li>如何移除submodule</li>
+<li>Repository里面有submodule的时候，如何clone</li>
+</ul>
+</blockquote>
+<h4 id="添加一个submodule"><a href="#添加一个submodule" class="headerlink" title="添加一个submodule"></a>添加一个submodule</h4><p>要添加一个submodule的时候，使用 git submodule add 命令：<br><figure class="highlight vim"><table><tr><td class="code"><pre><div class="line">$ git submodule <span class="built_in">add</span> <span class="symbol">&lt;repository&gt;</span> <span class="symbol">&lt;directory&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这样就可以吧repository的内容<strong>注册</strong>成directory下面的一个submodule了，比如说通过下面的命令来将fexo注册到我的git repository里面作为一个submodule</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><div class="line">$ git submodule <span class="built_in">add</span> gi<span class="variable">t:</span>//github.<span class="keyword">com</span>/XiaoliangHuang/fexo.git</div></pre></td></tr></table></figure>
+<p>然后在repository里面就会生产一个.gitmodules的文件，还有一个fexo的文件夹，里面copy了fexo 这个repository的全部文件.</p>
+<div align="center"><br><img src="/2017/03/23/Git版本控制/git_submodule_add.png" width="70%" align="center"><br></div>
+
+<p>要查看sumodule的状态，可以通过git submodule status命令, 可以看到这个 submodule 已经被注册了并且指向了哪一个commit。<br><figure class="highlight lsl"><table><tr><td class="code"><pre><div class="line">$ git submodule status</div><div class="line"> <span class="number">6</span>cce4cbbd0d27ce7d4207f932bcecb762958be98 fexo (v1<span class="number">.0</span><span class="number">.0</span><span class="number">-58</span>-g6cce4cb)</div></pre></td></tr></table></figure></p>
+<h4 id="Repository里面有submodule的时候，如何clone"><a href="#Repository里面有submodule的时候，如何clone" class="headerlink" title="Repository里面有submodule的时候，如何clone"></a>Repository里面有submodule的时候，如何clone</h4><p>当我们添加了一个submodule并且push到了自己的repository里面以后，如果其他人或者自己从其他的电脑上面需要clone这个包含了submodule的repository，要怎么做呢？</p>
+<p>默认情况下，git clone 不会下在submodule (会包含空的submodule的folder，和一个.gitmodules文件)，为了达到自己的目的，需要使用<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git submodule init</div><div class="line"><span class="variable">$ </span>git submodule update</div><div class="line"><span class="variable">$ </span>git checkout master</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git submodule init</div><div class="line">Submodule <span class="string">'fexo'</span> (git://github.com/XiaoliangHuang/fexo.git) registered <span class="keyword">for</span> path <span class="string">'fexo'</span></div><div class="line"> </div><div class="line">$ git submodule update</div><div class="line">Cloning into <span class="string">'D:/Test/git submodule/MyRepo_2/test/fexo'</span>...</div><div class="line">Submodule path <span class="string">'fexo'</span>: checked out <span class="string">'6cce4cbbd0d27ce7d4207f932bcecb762958be98'</span></div><div class="line"> </div><div class="line">$ git submodule status</div><div class="line"> 6cce4cbbd0d27ce7d4207f932bcecb762958be98 fexo (v1.0.0-58-g6cce4cb)</div></pre></td></tr></table></figure>
+<p>进入到submodule的folder以后，会看到这个时候head 并没有指向某个branch, 比如master，而是处于游离的状态：<br><figure class="highlight applescript"><table><tr><td class="code"><pre><div class="line">$ git status</div><div class="line">HEAD detached <span class="keyword">at</span> <span class="number">6</span>cce4cb</div><div class="line">nothing <span class="keyword">to</span> commit, working tree clean</div></pre></td></tr></table></figure></p>
+<p>这时候就需要在里面使用 <strong>git checkout master</strong> 命令切换到master branch了，不然以后在submit 和push的时候会出错。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git checkout master</div><div class="line">Switched to branch <span class="string">'master'</span></div><div class="line">Your branch is up-to-date with <span class="string">'origin/master'</span>.</div><div class="line"> </div><div class="line">$ git status</div><div class="line">On branch master</div><div class="line">Your branch is up-to-date with <span class="string">'origin/master'</span>.</div><div class="line">nothing to commit, working tree clean</div></pre></td></tr></table></figure>
+<h3 id="更新一个submodule"><a href="#更新一个submodule" class="headerlink" title="更新一个submodule"></a>更新一个submodule</h3><p>一个submodule就是一个完整的git repository，所以切到submodule的目录以后，就可以使用git的常规命令来进行操作了。</p>
+<p>在更新之前，需要注意的是init update下来的submodule是否是在制定的branch上面，比如master，否则需要先用 git checkout master 来进行切换操作。</p>
+<h3 id="删除一个submodule"><a href="#删除一个submodule" class="headerlink" title="删除一个submodule"></a>删除一个submodule</h3><h2 id="Paging-分页器"><a href="#Paging-分页器" class="headerlink" title="Paging 分页器"></a>Paging 分页器</h2><p>这部分内容摘自 <a href="http://gotgit.readthedocs.io/en/latest/01-meet-git/020-love-git.html#git" target="_blank" rel="external">爱上Git的理由</a></p>
 <p>虽然拥有图形化的客户端，但Git更有效率的操作方式还是命令行操作。使用命令行操作的好处一个是快，另外一个就是防止鼠标手的出现。Git的命令行进行了大量的人性化设计，包括命令补全、彩色字符输出等，不过最具特色的还是无处不在的分页器。</p>
 <p>在操作其他版本控制系统的命令行时，如果命令的输出超过了一屏，为了能够逐屏显示，需要在命令的后面加上一个管道符号将输出交给一个分页器。例如：<br><figure class="highlight gams"><table><tr><td class="code"><pre><div class="line"><span class="symbol">$</span> svn <span class="built-in">log</span> | less</div></pre></td></tr></table></figure></p>
 <p>而Git则不用如此麻烦，因为常用的Git的命令都带有一个分页器，当一屏显示不下时启动分页器。分页器默认使用less命令（less -FRSX）进行分页。</p>
@@ -304,6 +354,7 @@
 <p><a href="http://www.cnblog.me/2016/04/04/git-permissions/" target="_blank" rel="external">Git 权限控制</a></p>
 <p><a href="https://cnbin.github.io/blog/2015/06/19/git-config-ming-ling-cha-kan-pei-zhi-wen-jian/" target="_blank" rel="external">Git Config 命令查看配置文件</a></p>
 <p><a href="http://linlexus.com/git-submodule-usage/" target="_blank" rel="external">如何使用 Git Submodule</a></p>
+<p><a href="http://blog.devtang.com/2013/05/08/git-submodule-issues/" target="_blank" rel="external">Git submodule的坑</a></p>
 <p><a href="https://gist.github.com/nightire/5069597" target="_blank" rel="external">解决 Git 在 windows 下中文乱码的问题</a></p>
 <p><a href="http://teohm.com/blog/learning-git-internals-by-example/" target="_blank" rel="external">Learning Git Internals by Example</a></p>
 <p><a href="http://blog.xiayf.cn/2013/09/28/learning-git-internals-by-example/" target="_blank" rel="external">通过示例学习Git内部构造（译）</a></p>
