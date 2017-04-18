@@ -19,31 +19,31 @@
 <meta name="keywords" content="Git,技术">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git版本控制">
-<meta property="og:url" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/index.html">
+<meta property="og:url" content="laomanco.com/2017/03/23/Git版本控制/index.html">
 <meta property="og:site_name" content="Laomanco's Blog">
 <meta property="og:description" content="Git 概览下面这张图是根据自己理解画出来的关于git的一个大概的知识框架图，分别从版本控制的发展,Git的优点,原理和使用的角度队涉及到的知识进行了一个梳理, 最后还有一些遇到过的小问题或者是Tip的总结.  版本控制的发展和历史虽然只有几十年的时间, 但是版本控制已经有着几代的更新,最近几年,Git的发展则出现了一统江湖的局面。仔细想想，除了Git本身的优点之外，存储空间和网络速度的发展，也使">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_knowledge_map.svg">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/version_control.svg">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_snapshot.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_structure.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_file_states.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_status_bash_2.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_status_vscode.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_clean_bash.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_reset_add.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_reset_add.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_rollback_scenarios.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_reset_commit.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_reset_commit_parameters.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/reset_vs_revert.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_checkout.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/submodule.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_submodule_add.png">
+<meta property="og:image" content="/23/Git版本控制/git_knowledge_map.svg">
+<meta property="og:image" content="/23/Git版本控制/version_control.svg">
+<meta property="og:image" content="/23/Git版本控制/git_snapshot.png">
+<meta property="og:image" content="/23/Git版本控制/git_structure.png">
+<meta property="og:image" content="/23/Git版本控制/git_file_states.png">
+<meta property="og:image" content="/23/Git版本控制/git_status_bash_2.png">
+<meta property="og:image" content="/23/Git版本控制/git_status_vscode.png">
+<meta property="og:image" content="/23/Git版本控制/git_clean_bash.png">
+<meta property="og:image" content="/23/Git版本控制/git_reset_add.png">
+<meta property="og:image" content="/23/Git版本控制/git_reset_add.png">
+<meta property="og:image" content="/23/Git版本控制/git_rollback_scenarios.png">
+<meta property="og:image" content="/23/Git版本控制/git_reset_commit.png">
+<meta property="og:image" content="/23/Git版本控制/git_reset_commit_parameters.png">
+<meta property="og:image" content="/23/Git版本控制/reset_vs_revert.png">
+<meta property="og:image" content="/23/Git版本控制/git_checkout.png">
+<meta property="og:image" content="/23/Git版本控制/submodule.png">
+<meta property="og:image" content="/23/Git版本控制/git_submodule_add.png">
 <meta property="og:updated_time" content="2017-04-08T07:42:15.990Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git版本控制">
 <meta name="twitter:description" content="Git 概览下面这张图是根据自己理解画出来的关于git的一个大概的知识框架图，分别从版本控制的发展,Git的优点,原理和使用的角度队涉及到的知识进行了一个梳理, 最后还有一些遇到过的小问题或者是Tip的总结.  版本控制的发展和历史虽然只有几十年的时间, 但是版本控制已经有着几代的更新,最近几年,Git的发展则出现了一统江湖的局面。仔细想想，除了Git本身的优点之外，存储空间和网络速度的发展，也使">
-<meta name="twitter:image" content="http://xiaolianghuang.github.io/2017/03/23/Git版本控制/git_knowledge_map.svg">
+<meta name="twitter:image" content="/23/Git版本控制/git_knowledge_map.svg">
 
   
 
@@ -189,32 +189,32 @@
   <div class="article-content">
     
       <h1 id="Git-概览"><a href="#Git-概览" class="headerlink" title="Git 概览"></a>Git 概览</h1><p>下面这张图是根据自己理解画出来的关于git的一个大概的知识框架图，分别从版本控制的发展,Git的优点,原理和使用的角度队涉及到的知识进行了一个梳理, 最后还有一些遇到过的小问题或者是Tip的总结.</p>
-<p><img src="/2017/03/23/Git版本控制/git_knowledge_map.svg" alt=""></p>
+<p><img src="/23/Git版本控制/git_knowledge_map.svg" alt=""></p>
 <h2 id="版本控制的发展和历史"><a href="#版本控制的发展和历史" class="headerlink" title="版本控制的发展和历史"></a>版本控制的发展和历史</h2><p>虽然只有几十年的时间, 但是版本控制已经有着几代的更新,最近几年,Git的发展则出现了一统江湖的局面。仔细想想，除了Git本身的优点之外，存储空间和网络速度的发展，也使得snapshot这种全量模式对空间/网络传输需求大的问题变得不那么严重，不然Git也不会有今天的江湖地位了。</p>
 <p>下面这张图描述了版本控制系统的一个总体概况，里面的绝大多数内容都来自<a href="http://gotgit.readthedocs.io/en/latest/01-meet-git/010-scm-history.html#cvs" target="_blank" rel="external">版本控制的前世和今生</a>，有兴趣的同学可以去查看原文。</p>
-<p><img src="/2017/03/23/Git版本控制/version_control.svg" alt=""></p>
+<p><img src="/23/Git版本控制/version_control.svg" alt=""></p>
 <h1 id="Git的原理和实现机制"><a href="#Git的原理和实现机制" class="headerlink" title="Git的原理和实现机制"></a>Git的原理和实现机制</h1><h2 id="分布式的版本控制系统"><a href="#分布式的版本控制系统" class="headerlink" title="分布式的版本控制系统"></a>分布式的版本控制系统</h2><p>相比于TFS/Subversion/SD这些集中式的版本控制系统，Git采取的是一种分布式的结构, 一个本地的repository就是一个完整的单机版本控制系统,加上服务器上面的remote repository以后,不同主机/用户之间就可以进行分享和协作了。</p>
 <h2 id="保存修改文件的-snapshot-而不是增量"><a href="#保存修改文件的-snapshot-而不是增量" class="headerlink" title="保存修改文件的 snapshot 而不是增量"></a>保存修改文件的 snapshot 而不是增量</h2><p>和以前集中式的版本控制系统（SVN…）所不同的是，当某个文件发生修改的时候，Git所保存的是一个全新的备份。如下图所示：</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_snapshot.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_snapshot.png" width="80%" align="center"><br></div>
 
 <p>这样带来的好处是切换速度快，要查看某个版本（某个commit）的project信息的时候，只需要把对应的文件拿出来就可以，所以Git从任意一个版本都能够很方便的进行build或者是拆分出新的branch出来。</p>
 <p>而不好的地方就是每次一点点小小的修改都要保存一整个文件的snapshot，这样空间上会非常浪费，从而影响push和get的性能，但是因为Git本身是分布式的，常规的操作都是在本地的repository里面进行的，也就是硬盘读写，加上网络速度和存储空间越来越好，这部分的影响相对会减轻。</p>
 <h2 id="工作区，-暂存区-和-Git仓库"><a href="#工作区，-暂存区-和-Git仓库" class="headerlink" title="工作区， 暂存区 和 Git仓库"></a>工作区， 暂存区 和 Git仓库</h2><p>下图给出了Git 版本控制系统的基本机构：</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_structure.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_structure.png" width="70%" align="center"><br></div>
 
 <p>它包含四个主要部分：<br><figure class="highlight groovy"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> <span class="string">WorkSpace:</span> </div><div class="line">    也叫Working Area或者工作目录，对项目的某个版本独立提取出来的内容。 这些从 Git 仓库的压缩数据库中提取出来的文件，放在磁盘上供你使用或修改。</div><div class="line"><span class="number">2.</span> <span class="string">StagingArea:</span> </div><div class="line">    也叫做Index或者暂存区域，是一个文件，保存了下次将提交的文件列表信息，一般在 Git 仓库目录中。</div><div class="line"><span class="number">3.</span> <span class="string">Repository:</span> </div><div class="line">    也叫Git仓库，是 Git 用来保存项目的元数据和对象数据库的地方。 这是 Git 中最重要的部分，从其它计算机克隆仓库时，拷贝的就是这里的数据。</div><div class="line"><span class="number">4.</span> <span class="string">RemoteRepository:</span> </div><div class="line">    网络服务器上面Git Center里面，用来保存Repository的地方，跟本地Repository相对应，通过Pull<span class="regexp">/Push/</span>Clone等方式进行操作。</div></pre></td></tr></table></figure></p>
 <p>这四个部分，尤其是前面local的三个部分，构成了我们日常使用Git的主要场景，在尝试过一些git的基本操作，比如下面这些命令以后</p>
 <figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git pull</div><div class="line"><span class="variable">$ </span>git status</div><div class="line"><span class="variable">$ </span>git add .</div><div class="line"><span class="variable">$ </span>git commit -m <span class="string">"xxx"</span></div><div class="line"><span class="variable">$ </span>git push</div></pre></td></tr></table></figure>
 <p>需要再进一步的时候，就需要对于这样一个基本结构，还有这些地方与Git管理的文件的状态之间的对应关系有着清晰的认识。</p>
 <h2 id="Git文件的状态和迁移"><a href="#Git文件的状态和迁移" class="headerlink" title="Git文件的状态和迁移"></a>Git文件的状态和迁移</h2><p>对应于上面一节提到的Git系统的几个部分，在某个时刻，使用Git管理的文件就有可能处于不同的位置，拥有不同的状态。下面的图就给出了Git文件可能的状态</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_file_states.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_file_states.png" width="80%" align="center"><br></div>
 
 <p>使用<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git status <span class="_">-s</span></div></pre></td></tr></table></figure></p>
 <p>命令就可以查看新增/修改的文件和状态:</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_status_bash_2.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_status_bash_2.png" width="70%" align="center"><br></div>
 
 <p>还有一些UI的tool,比如VS Code,会有这更好的状态表示：</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_status_vscode.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_status_vscode.png" width="70%" align="center"><br></div>
 
 <p>但是使用命令行仍然是Git最主要和最为方便的模式,因此当你使用了一段时间的Git以后，使用 <em>git status -s</em> 命令查看文件的状态，并且清晰的知道其所在的位置（工作区，暂存区和git repository），和可能的状态转移，以及使用什么命令进行操作，就非常的重要了。这也是区别知道git和真正会用git的很重要一点。</p>
 <h1 id="Git的一些使用经验"><a href="#Git的一些使用经验" class="headerlink" title="Git的一些使用经验"></a>Git的一些使用经验</h1><h2 id="Rollback-Clean，Reset-Checkout-Revert的使用"><a href="#Rollback-Clean，Reset-Checkout-Revert的使用" class="headerlink" title="Rollback: Clean，Reset, Checkout, Revert的使用"></a>Rollback: Clean，Reset, Checkout, Revert的使用</h2><p>最初的时候，我们的在git里面对文件的操作都是正向的，也就是 add/commit/push 这些命令，如果有问题，也可以通过修改以后再次提交的方法进行覆盖。但是在管理很多的code的时候，这样人肉的方法就会显得效率很低。</p>
@@ -224,13 +224,13 @@
 <p>前面提到过，Git 主要有三个部分组成（不考虑 remote repository）： Workspace，Staging Area 和 Repository。当文件处于他们当中不同的位置（对应不同的状态）的时候，通过对于的操作都可以进行rollback， 以文件123.txt 为例：</p>
 <h4 id="Rollback-from-Create"><a href="#Rollback-from-Create" class="headerlink" title="Rollback from Create"></a>Rollback from Create</h4><p>这个时候，文件的状态是 unstaged/untracked， 只是在本地有一个文件而已，要进行删除的话，使用 git clean 命令。<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ git clean <span class="_">-f</span></div></pre></td></tr></table></figure></p>
 <p>主要的参数有 d/n/f：<br><figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby"><span class="symbol">d:</span> 同时删除untracked的目录</span></div><div class="line">-<span class="ruby"><span class="symbol">n:</span> 显示将会做什么，但是不会真的删除文件</span></div><div class="line">-<span class="ruby">f：force， 最终删除文件</span></div></pre></td></tr></table></figure></p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_clean_bash.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_clean_bash.png" width="70%" align="center"><br></div>
 
 <p>要特别提出的是<a href="">-n</a> 这个参数，会用 <em>“would remove”</em> 提示你将会进行的操作供你检验，但是文件并不会真的被删除<br><figure class="highlight maxima"><table><tr><td class="code"><pre><div class="line">$ git clean -nf <span class="built_in">reset</span>.txt</div><div class="line">Would <span class="built_in">remove</span> <span class="built_in">reset</span>.txt</div></pre></td></tr></table></figure></p>
 <p>更详细的内容可以参考 <a href="">git clean –help</a></p>
 <h4 id="Rollback-from-Add"><a href="#Rollback-from-Add" class="headerlink" title="Rollback from Add"></a>Rollback from Add</h4><p>如果文件已经使用 git add, 那么文件的状态就是 stacked/modifed, 要把文件从staging area里面去掉，就需要使用 git reset 命令</p>
 <figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>git reset <span class="number">123</span>.txt</div></pre></td></tr></table></figure>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
 
 <p>这时候文件就会从staging area里面删掉，然后恢复到workspace。<br>reset 命令还有一些参数来控制rollback的效果，比如说到workspace还是staging area，但是只在只对commit的时候才有用，就放到下面一节描述了。</p>
 <p>Rest 到 workspace以后，如果要继续删除，就像上面说的那样，使用 git clean 命令就可以了。</p>
@@ -241,11 +241,11 @@
 </blockquote>
 <p>如下所示，如果reset命令后面带有具体的路径，那么commit里面与这个路径/文件不相关的文件就不会被影响。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ git <span class="keyword">reset</span> <span class="keyword">head</span>^ <span class="number">123.</span>txt</div></pre></td></tr></table></figure>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_reset_add.png" width="70%" align="center"><br></div>
 
 <p>这时候文件的snapshot就会从staging area里面删掉，然后恢复到workspace。</p>
 <p>下面这张图显示了 clean 和 reset 命令对文件的影响</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_rollback_scenarios.png" width="60%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_rollback_scenarios.png" width="60%" align="center"><br></div>
 
 
 <figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">HEAD 参数：</div><div class="line"></div><div class="line">然后我们注意到，对<span class="keyword">Commit</span>进行<span class="keyword">rollback</span>操作的时候，有个 <span class="keyword">head</span> 的参数，后面还带有^或者是~<span class="number">2</span>这样的符号, 这个参数表明的是<span class="keyword">rollback</span>到哪个<span class="keyword">commit</span>。 <span class="keyword">HEAD</span>其实是一个指针（Git内部结构里面会讲到），指向当前最新的<span class="keyword">commit</span>, <span class="keyword">head</span>^表示的是<span class="keyword">parent</span>，也就是上一个<span class="keyword">commit</span>，<span class="keyword">head</span>^^这是表示再早一个的<span class="keyword">commit</span>。当需要<span class="keyword">rollback</span>到更早的<span class="keyword">commit</span>的时候，则需要使用~n的表示方法，所以<span class="keyword">head</span>^ 跟 <span class="keyword">head</span>~<span class="number">1</span>是等价的。</div></pre></td></tr></table></figure>
@@ -255,26 +255,26 @@
 <p><strong>2. Commit 层面的 reset 操作</strong></p>
 </blockquote>
 <p>当通过reset来rollback整个commit的时候，其作用域就是所有包含在commit里面的文件。下面的例子说明了两个文件时候的情况。</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_commit.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_reset_commit.png" width="70%" align="center"><br></div>
 
 <p>可以看到，commit过的两个文件都被放回到了staging area里面，变成modified的状态了。</p>
 <p>需要说明的是，当使用reset命令对commit作用域进行操作的时候，head指针会移动到reset之后的那个commit。所以show head 命令以后，我么看到的commit是init而不是update。</p>
 <p>reset 命令还有一些参数来控制rollback的效果，比如说到workspace还是staging area</p>
 <figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">-soft – 缓存区和工作目录都不会被改变</span></div><div class="line">-<span class="ruby">-mixed – 默认选项。缓存区和你指定的提交同步，但工作目录不受影响</span></div><div class="line">-<span class="ruby">-hard – 缓存区和工作目录都同步到你指定的提交</span></div></pre></td></tr></table></figure>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_reset_commit_parameters.png" width="60%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_reset_commit_parameters.png" width="60%" align="center"><br></div>
 
 <blockquote>
 <p><strong>3. 通过 revert 来进行 commit 层面的rollback</strong></p>
 </blockquote>
 <p>除了 Reset 之外， git 还提供了一个命令 Revert 来进行rollback的操作，但是不同的是， Revert 命令不会往前移动 HEAD，而是会把修改当成一个新的commit 附加在原先的 HEAD 后面，并且移动 HEAD 到最新的 commit。</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/reset_vs_revert.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/reset_vs_revert.png" width="80%" align="center"><br></div>
 
 
 <h4 id="Rollback-from-Branch"><a href="#Rollback-from-Branch" class="headerlink" title="Rollback from Branch"></a>Rollback from Branch</h4><p>方便的 branch 分支管理是 Git 的一个重要特点，通过新建branch，可以针对一个feature进行独立开发，也可以很容易的在几个人之前share 临时的change （SD 里面可能就需要通过dpk打包之类的方式来实现）。</p>
 <p>所以checkout 应该是使用频率仅次于add/commit/push/pull 的命令了，当传入分支名时，可以切换到那个分支。<br><figure class="highlight ebnf"><table><tr><td class="code"><pre><div class="line"><span class="attribute">git checkout hotfix</span></div></pre></td></tr></table></figure></p>
 <p>上面这个命令做的不过是将HEAD移到一个新的分支，然后更新工作目录。因为这可能会覆盖本地的修改，Git强制你提交或者缓存工作目录中的所有更改，不然在checkout的时候这些更改都会丢失。和git reset不一样的是，git checkout没有移动这些分支。</p>
 <p>下面这张图说明了 checkout 的使用效果。</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_checkout.png" width="60%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_checkout.png" width="60%" align="center"><br></div>
 
 <p>这一章节总结了git里面rollback相关的主要scenario和相关的解决办法，关于rollback 还有更多细致的分析和别的操作方法，比如checkout到某个commit，以及关于rollback时候，git内部结构的变化，可以参考<a href="https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-代码回滚%EF%BC%9AReset、Checkout、Revert的选择" target="_blank" rel="external">代码回滚：Reset、Checkout、Revert的选择</a></p>
 <hr>
@@ -296,7 +296,7 @@
 </ol>
 </blockquote>
 <p>下面展示了Hexo Repository里面，通过submodule形式引用fexo主题时候，github上面repository的结构</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/submodule.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/submodule.png" width="80%" align="center"><br></div>
 
 <p>利用submodule，就可以将第三方的fexo主题跟我自己的hexo项目分开进行管理了。</p>
 <p>在解释了submodule是什么以后，下面介绍一下submodule的使用，包括：</p>
@@ -313,7 +313,7 @@
 <p>这样就可以吧repository的内容<strong>注册</strong>成directory下面的一个submodule了，比如说通过下面的命令来将fexo注册到我的git repository里面作为一个submodule</p>
 <figure class="highlight vim"><table><tr><td class="code"><pre><div class="line">$ git submodule <span class="built_in">add</span> gi<span class="variable">t:</span>//github.<span class="keyword">com</span>/XiaoliangHuang/fexo.git</div></pre></td></tr></table></figure>
 <p>然后在repository里面就会生产一个.gitmodules的文件，还有一个fexo的文件夹，里面copy了fexo 这个repository的全部文件.</p>
-<div align="center"><br><img src="/2017/03/23/Git版本控制/git_submodule_add.png" width="70%" align="center"><br></div>
+<div align="center"><br><img src="/23/Git版本控制/git_submodule_add.png" width="70%" align="center"><br></div>
 
 <p>要查看sumodule的状态，可以通过git submodule status命令, 可以看到这个 submodule 已经被注册了并且指向了哪一个commit。<br><figure class="highlight lsl"><table><tr><td class="code"><pre><div class="line">$ git submodule status</div><div class="line"> <span class="number">6</span>cce4cbbd0d27ce7d4207f932bcecb762958be98 fexo (v1<span class="number">.0</span><span class="number">.0</span><span class="number">-58</span>-g6cce4cb)</div></pre></td></tr></table></figure></p>
 <h4 id="Repository里面有submodule的时候，如何clone"><a href="#Repository里面有submodule的时候，如何clone" class="headerlink" title="Repository里面有submodule的时候，如何clone"></a>Repository里面有submodule的时候，如何clone</h4><p>当我们添加了一个submodule并且push到了自己的repository里面以后，如果其他人或者自己从其他的电脑上面需要clone这个包含了submodule的repository，要怎么做呢？</p>

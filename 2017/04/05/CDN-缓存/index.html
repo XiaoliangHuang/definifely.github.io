@@ -19,21 +19,21 @@
 <meta name="keywords" content="CDN,缓存">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CDN 缓存">
-<meta property="og:url" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/index.html">
+<meta property="og:url" content="laomanco.com/2017/04/05/CDN-缓存/index.html">
 <meta property="og:site_name" content="Laomanco's Blog">
 <meta property="og:description" content="在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。 -- CDN 是什么？-- CDN 有什么作用？-- CDN 怎么用？-- CDN 的原理是什么？  CDN 概述下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn_knowledge_map.svg">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn_principle.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cache_strategy.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/domain_cname.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/san.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/ping_microsoft_com.png">
-<meta property="og:updated_time" content="2017-04-10T05:48:29.633Z">
+<meta property="og:image" content="/05/CDN-缓存/cdn_knowledge_map.svg">
+<meta property="og:image" content="/05/CDN-缓存/cdn.png">
+<meta property="og:image" content="/05/CDN-缓存/cdn_principle.png">
+<meta property="og:image" content="/05/CDN-缓存/cache_strategy.png">
+<meta property="og:image" content="/05/CDN-缓存/domain_cname.png">
+<meta property="og:image" content="/05/CDN-缓存/san.png">
+<meta property="og:image" content="/05/CDN-缓存/ping_microsoft_com.png">
+<meta property="og:updated_time" content="2017-04-11T11:34:10.037Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CDN 缓存">
 <meta name="twitter:description" content="在介绍CDN之前，我们先在脑海里面记住下面几个问题基本的问题, 然后通过后面的内容，逐步使这些基本的问题得到解答。 -- CDN 是什么？-- CDN 有什么作用？-- CDN 怎么用？-- CDN 的原理是什么？  CDN 概述下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一">
-<meta name="twitter:image" content="http://xiaolianghuang.github.io/2017/04/05/CDN-缓存/cdn_knowledge_map.svg">
+<meta name="twitter:image" content="/05/CDN-缓存/cdn_knowledge_map.svg">
 
   
 
@@ -182,11 +182,11 @@
 <figure class="highlight haml"><table><tr><td class="code"><pre><div class="line">-<span class="ruby">- CDN 是什么？</span></div><div class="line">-<span class="ruby">- CDN 有什么作用？</span></div><div class="line">-<span class="ruby">- CDN 怎么用？</span></div><div class="line">-<span class="ruby">- CDN 的原理是什么？</span></div></pre></td></tr></table></figure>
 <hr>
 <h1 id="CDN-概述"><a href="#CDN-概述" class="headerlink" title="CDN 概述"></a>CDN 概述</h1><p>下面的这张Xmind图梳理了自己理解的关于CDN的知识图点，先从原理上介绍，然后通过一个实例了解到CDN的具体使用（试用具体产品的是了解一个东西很好的切入点），最后面对一些相关的扩展问题进行介绍。写几十博客的时候，使用Xmind之类的思维导图软件整理知识点是一种非常好的方法，通过这种层次性的关系，能够帮你理清楚思路。</p>
-<p><img src="/2017/04/05/CDN-缓存/cdn_knowledge_map.svg" alt=""></p>
+<p><img src="/05/CDN-缓存/cdn_knowledge_map.svg" alt=""></p>
 <hr>
 <h2 id="什么是CDN"><a href="#什么是CDN" class="headerlink" title="什么是CDN"></a>什么是CDN</h2><p>CDN 的全称是 Content Delivery Network， 内容分发网络，是一种通过缓存服务器进行网站加速的方式。</p>
 <p>CDN 解决的，是在复杂的网络情况下，很多地方用户访问网站速度慢的问题，其原理是在不同的地方建立缓存服务器，让用户就近访问。图片来源<a href="http://www.cdncoupon.com/maxcdn-coupon/" target="_blank" rel="external">MaxCDN Coupon</a></p>
-<div align="center"><br><img src="/2017/04/05/CDN-缓存/cdn.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/05/CDN-缓存/cdn.png" width="80%" align="center"><br></div>
 
 <p>比如说，国内的宽带运营商有电信，网通，移动，长城等等，还有教育网，这些网络自己相互访问是很慢的，假如我是一个电信的用户，你的网站托管在了网通的机房里面，要直接访问网站，肯定慢得要死，但是如果把这个网站的内容在一个电信的服务器上面缓存起来，那么访问的时候，就不需要跨界到网通的线路上了，速度也自然会快起来。</p>
 <hr>
@@ -210,7 +210,7 @@
 </ul>
 </blockquote>
 <p>下面这张图表明了CDN 的基本流程和原理，图片来自<a href="https://docs.qingcloud.com/guide/cdn.html" target="_blank" rel="external">青云</a></p>
-<div align="center"><br><img src="/2017/04/05/CDN-缓存/cdn_principle.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/05/CDN-缓存/cdn_principle.png" width="80%" align="center"><br></div>
 
 <p>深入到CDN的实现，其内部也是一套web service的系统，会有load balance，分层系统，存储，调度算法等等，可以参考<a href="http://peiqiang.net/pictures/aliyun/阿里CDN技术揭秘.pdf" target="_blank" rel="external">阿里云的实现</a></p>
 <hr>
@@ -237,7 +237,7 @@
 </blockquote>
 <p>CDN 节点访问源站点过程，就叫做回源，前面在讲CDN的作用的时候提到过，如果CDN的回源算法不合理，也会对源站服务器造成很大的压力。</p>
 <p><a href="https://help.aliyun.com/document_detail/27136.html?spm=5176.doc27112.6.576.6RwaW8" target="_blank" rel="external">阿里云CDN</a>的这张图很好的描述了CDN 服务的缓存策略和配置</p>
-<div align="center"><br><img src="/2017/04/05/CDN-缓存/cache_strategy.png" width="90%" align="center"><br></div>
+<div align="center"><br><img src="/05/CDN-缓存/cache_strategy.png" width="90%" align="center"><br></div>
 
 <hr>
 <h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><h3 id="CNAME"><a href="#CNAME" class="headerlink" title="CNAME"></a>CNAME</h3><p>用户访问一个网站的时候，最主要的两步就是</p>
@@ -248,7 +248,7 @@
 </ol>
 </blockquote>
 <p>在正常的情况下，NDS根据域名解析出来的IP地址，都是源站服务器的ip，如何让DNS将用户引导到CDN服务器上呢？方法就是使用<a href="https://en.wikipedia.org/wiki/CNAME_record" target="_blank" rel="external">CNAME</a>, 通常情况下，DNS解析会有两种类型，一个是AName, 对应的是服务器的 ip 地址， CNAME则是别名，可以对应到另外一个域名，通过CNAME就可以将源站的流量引导到CND服务器上面了。下面是在阿里云万网申请域名以后，添加解析的页面。</p>
-<div align="center"><br><img src="/2017/04/05/CDN-缓存/domain_cname.png" width="90%" align="center"><br></div>
+<div align="center"><br><img src="/05/CDN-缓存/domain_cname.png" width="90%" align="center"><br></div>
 
 <h3 id="是否启动CDN访问过程对比"><a href="#是否启动CDN访问过程对比" class="headerlink" title="是否启动CDN访问过程对比"></a>是否启动CDN访问过程对比</h3><h3 id="CDN-的调度算法"><a href="#CDN-的调度算法" class="headerlink" title="CDN 的调度算法"></a>CDN 的调度算法</h3><h3 id="安全防御"><a href="#安全防御" class="headerlink" title="安全防御"></a>安全防御</h3><hr>
 <h2 id="HTTPS-支持"><a href="#HTTPS-支持" class="headerlink" title="HTTPS 支持"></a>HTTPS 支持</h2><p>随着网络的发展，安全问题也越来越受到重视，所以越来越多的网站都开始使用全站Https， 比如google，Amazon。<br>使用给网络带来了安全，但是对于传统的CDN业务却带来了新的新的问题。</p>
@@ -263,7 +263,7 @@
 <p>在建立了用户到CDN之间的连接以后，还有一个问题，就是回源的时候，CDN服务器跟源站之间的通信，理论上，用户到CDN跟CDN到源站是两个独立的过程，可以使用不同的协议和不同的证书，但是为了减少对源站的影响（是否启用CDN一样），应该是在两段通路上，都使用相同的https cert。</p>
 <p>关于HTTPS 加速的详细分析，可以参考<a href="https://www.incapsula.com/cdn-guide/cdn-and-ssl-tls.html?winzoom=1" target="_blank" rel="external">CDN and SSL/TSL</a></p>
 <h3 id="Cert的别名：SAN"><a href="#Cert的别名：SAN" class="headerlink" title="Cert的别名：SAN"></a>Cert的别名：SAN</h3><p>说到Https的cert，这里要提到一个问题，当我们通过浏览器查看一个https网站的cert的时候，可能看到的Issued信息并不是这家网站本身，比如说打开azure.cn，查看其cert信息，会发现这个cert并不是给azure.cn，而是给一个叫做ssl.chinanetcenter.com的域名的，理论上这样的cert是无法通过验证的，但是在x509 的标准里面，包含了一个subject alternative names 的field，里面包含了一个域名的list，所有在这个list里面的域名，都会被当成授权过的。打开这张cert的details，azure.cn也确实包含在SAN list里面。</p>
-<div align="center"><br><img src="/2017/04/05/CDN-缓存/san.png" width="90%" align="center"><br></div>
+<div align="center"><br><img src="/05/CDN-缓存/san.png" width="90%" align="center"><br></div>
 
 
 <hr>
@@ -272,7 +272,7 @@
 <blockquote>
 <p>启用CDN的目的，是在不同的地方对数据进行多份缓存，加速访问，所以启用了CDN 的网站，从不同的地方去ping的话，会得到不同的 ip， 通过这个条件，就可以判断一个网站是否启用了CDN了。但是一般情况下，个人访问的接入点是不会变的，没办法做到从不同的地方去ping，好在有一些第三方的工具可以帮助我们做到这一点，比如<a href="http://tool.chinaz.com/" target="_blank" rel="external">站长工具Ping</a> 和360的<a href="http://ce.cloud.360.cn/" target="_blank" rel="external">360 齐云测</a>。下图就给出了站长工具对于域名microsoft.com的测试结果，从不同的地方ping www.microsoft.com, 可以得到29个独立的ip，于是我们就可以知道这个网站是启用了CDN的。</p>
 </blockquote>
-<div align="center"><br><img src="/2017/04/05/CDN-缓存/ping_microsoft_com.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/05/CDN-缓存/ping_microsoft_com.png" width="80%" align="center"><br></div>
 
 
 <p><strong> 2. CDN 服务的计费模式</strong></p>

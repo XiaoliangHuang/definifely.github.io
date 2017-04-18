@@ -19,18 +19,18 @@
 <meta name="keywords" content="Hexo,博客">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Hexo搭建博客">
-<meta property="og:url" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/index.html">
+<meta property="og:url" content="laomanco.com/2017/03/21/使用Hexo搭建博客/index.html">
 <meta property="og:site_name" content="Laomanco's Blog">
 <meta property="og:description" content="最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。 Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是b">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/hexo_xmind.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/hello_world.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/fisrt_blg.png">
-<meta property="og:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/git_repo.png">
+<meta property="og:image" content="/21/使用Hexo搭建博客/hexo_xmind.png">
+<meta property="og:image" content="/21/使用Hexo搭建博客/hello_world.png">
+<meta property="og:image" content="/21/使用Hexo搭建博客/fisrt_blg.png">
+<meta property="og:image" content="/21/使用Hexo搭建博客/git_repo.png">
 <meta property="og:updated_time" content="2017-04-07T05:18:57.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Hexo搭建博客">
 <meta name="twitter:description" content="最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。 Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是b">
-<meta name="twitter:image" content="http://xiaolianghuang.github.io/2017/03/21/使用Hexo搭建博客/hexo_xmind.png">
+<meta name="twitter:image" content="/21/使用Hexo搭建博客/hexo_xmind.png">
 
   
 
@@ -177,7 +177,7 @@
     
       <p>最近在整理笔记的时候，发现OneNote跟EverNote这样的工具都不够方法，主要是排版，引用，语法强调跟层次结构上面很难满足需求，后来又看了简书之类的平台，本来是为了找一个写技术文档的地方的，最后发现了用Hexo来建立自己的博客的方式，在满足自己需求的前提下，还能够拥有自己的专属域名，觉得很cool，就研究了一下。</p>
 <p>Hexo是一款基于Node.js的静态博客框架，所谓的静态博客，就是说文章是build成一个个的静态页面，而不是存在数据库里面动态加载。</p>
-<p><img src="/2017/03/21/使用Hexo搭建博客/hexo_xmind.png" alt=""></p>
+<p><img src="/21/使用Hexo搭建博客/hexo_xmind.png" alt=""></p>
 <p>上面这张图给出了利用Hexo搭建自己的博客所涉及到的几个方面, 归纳起来就是下面几个问题：</p>
 <blockquote>
 <p>(1). 如何搭建博客？<br>(2). Host在哪里？<br>(3). 怎么发布？<br>(4). 域名管理<br>(5). 代码管理 </p>
@@ -197,14 +197,14 @@
 <h2 id="进行本地测试"><a href="#进行本地测试" class="headerlink" title="进行本地测试"></a>进行本地测试</h2><p>在命令行里面输入<br><figure class="highlight elixir"><table><tr><td class="code"><pre><div class="line"><span class="variable">$ </span>hexo s</div></pre></td></tr></table></figure></p>
 <p>就可以启动一个本地的service<br><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line">$ hexo s</div><div class="line">INFO  <span class="keyword">Start</span> processing</div><div class="line">INFO  Hexo <span class="keyword">is</span> running <span class="keyword">at</span> <span class="keyword">http</span>://localhost:<span class="number">4000</span>/. Press Ctrl+C <span class="keyword">to</span> stop.</div></pre></td></tr></table></figure></p>
 <p>在浏览器输入<a href="http://localhost:4000/" target="_blank" rel="external">localhost:4000</a> (4000是默认端口)就可以看到下面的网站首页了</p>
-<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/hello_world.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/21/使用Hexo搭建博客/hello_world.png" width="80%" align="center"><br></div>
 
 <p>完成以后，会生成一个Hexo项目的文件夹，名字就是前面 <em>init</em> 命令参数里面的<em>folder</em>，各个文件夹的含义参考<a href="https://hexo.io/zh-cn/docs/setup.html" target="_blank" rel="external">官方网站说明</a>。</p>
 <h2 id="往Blog里面添加一篇新的文章"><a href="#往Blog里面添加一篇新的文章" class="headerlink" title="往Blog里面添加一篇新的文章"></a>往Blog里面添加一篇新的文章</h2><p>当测试环境调通以后，下面就尝试自己添加一篇blog文章吧，方法也是超级简单，只需要执行下面的命令就可以了<br><figure class="highlight gauss"><table><tr><td class="code"><pre><div class="line">$ hexo <span class="keyword">new</span> &lt;<span class="built_in">title</span>&gt;</div></pre></td></tr></table></figure></p>
 <p>然后打开 <a href="">/source/_posts</a> 就会发现一个 <em>title.md</em> 命名的文件，例如我的title是MyFirstBlog,于是就是生产一个名为 MyFirstBlog.md 文件，还有一个同名文件夹用来存放一些图片之类的资源文件供文章引用。</p>
 <figure class="highlight 1c"><table><tr><td class="code"><pre><div class="line"><span class="string">|--souce</span></div><div class="line">  <span class="string">|--_posts</span></div><div class="line">     <span class="string">|--MyFirstBlog</span></div><div class="line">     <span class="string">|--MyFirstBlog.md</span></div></pre></td></tr></table></figure>
 <p>打开 MyFirstBlog.md，可以看到如下的内容</p>
-<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/fisrt_blg.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/21/使用Hexo搭建博客/fisrt_blg.png" width="80%" align="center"><br></div>
 
 <p>文件最上方用 — 隔开的部分叫做 Front-matter，用来定义文件本身的一些属性，名字，日期什么的，还可以配置其他的Catagory,Tag之类的信息，具体内容可以参考 <a href="https://hexo.io/zh-cn/docs/front-matter.html" target="_blank" rel="external">官方文档Front-matter</a> 章节。</p>
 <p>剩下的部分就是正文了，用 Markdown 写文章成了这几年的一种主流方式，个人感觉是一种非常简洁的方式，语法比较简单，解释转换出来的效果也很干净，看起来觉得很舒服，或者说很专业，有点早年用Latex写论文的感觉，但是要容易很多。关于 Markdown语法，网上有很多的资料介绍，搜索 <em>“为什么要用 Markdown 写文章”</em> 就会出来很多介绍文章，这里就不详细展开了。当然，任何事情都有两面性，Markdown 也有它不足的地方，比如图片的引用，<a href="https://sspai.com/post/37340" target="_blank" rel="external">反思Markdown：Markdown的长与短</a> 里面总结的很好，可以花几分钟时间看看。</p>
@@ -213,7 +213,7 @@
 <p>为了不会因为走的太远而打断思路，这些扩展功能将放在后面进行介绍。在完成了本地环境的搭建以后，我们接下来要做的，是将这个Blog搬到真正可以puglic访问的网络上。</p>
 <h1 id="Host在哪里：Cloud-或者Git-Pages"><a href="#Host在哪里：Cloud-或者Git-Pages" class="headerlink" title="Host在哪里：Cloud 或者Git Pages"></a>Host在哪里：Cloud 或者Git Pages</h1><h2 id="Git-Pages"><a href="#Git-Pages" class="headerlink" title="Git Pages"></a>Git Pages</h2><h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>如何注册GitHub以及建立Repository,可以参考 <a href="http://www.jianshu.com/p/e99ed60390a8" target="_blank" rel="external">20分钟教你使用hexo搭建github博客</a>,。</p>
 <p>在最开是的需求里面，Git 是用来将生成的静态网站内容同步到GitHib上去的, 所以这里需要注册GitHub账号并且下载客户端, 实际上, 我们最会用到两个Git Repository, 一个用来上传Build出来的静态网站, 另外一个这是用来管理我们自己整个Hexo的project, 以便于我们可以随时的在不同的电脑上面进行修改. 其中的关系可以用下面的图来表示：</p>
-<div align="center"><br><img src="/2017/03/21/使用Hexo搭建博客/git_repo.png" width="80%" align="center"><br></div>
+<div align="center"><br><img src="/21/使用Hexo搭建博客/git_repo.png" width="80%" align="center"><br></div>
 
 <p>需要注意的是，在create repository的时候，名字必须是{username}.github.io, 也就是GitHub默认分配给你账号的域名。详细原因在后面讲Deploy的章节来解释</p>
 <h2 id="第三方Cloud-Service"><a href="#第三方Cloud-Service" class="headerlink" title="第三方Cloud Service"></a>第三方Cloud Service</h2><h1 id="如何发布：deploy到git-repository"><a href="#如何发布：deploy到git-repository" class="headerlink" title="如何发布：deploy到git repository"></a>如何发布：deploy到git repository</h1><h1 id="域名管理"><a href="#域名管理" class="headerlink" title="域名管理"></a>域名管理</h1><h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><h2 id="解析绑定域名到自己的Service"><a href="#解析绑定域名到自己的Service" class="headerlink" title="解析绑定域名到自己的Service"></a>解析绑定域名到自己的Service</h2><h1 id="代码管理"><a href="#代码管理" class="headerlink" title="代码管理"></a>代码管理</h1><h2 id="新建一个Git-Repository或者-Branch"><a href="#新建一个Git-Repository或者-Branch" class="headerlink" title="新建一个Git Repository或者 Branch"></a>新建一个Git Repository或者 Branch</h2><h2 id="Project-结构：-那些需要同步"><a href="#Project-结构：-那些需要同步" class="headerlink" title="Project 结构： 那些需要同步"></a>Project 结构： 那些需要同步</h2><h1 id="一些扩展功能的介绍"><a href="#一些扩展功能的介绍" class="headerlink" title="一些扩展功能的介绍"></a>一些扩展功能的介绍</h1><h2 id="扩展功能：设置Blog的主题Theme"><a href="#扩展功能：设置Blog的主题Theme" class="headerlink" title="扩展功能：设置Blog的主题Theme"></a>扩展功能：设置Blog的主题Theme</h2><h2 id="扩展功能-Catalog-Tag"><a href="#扩展功能-Catalog-Tag" class="headerlink" title="扩展功能: Catalog/Tag"></a>扩展功能: Catalog/Tag</h2><h2 id="扩展功能：第三方Comments插件的使用"><a href="#扩展功能：第三方Comments插件的使用" class="headerlink" title="扩展功能：第三方Comments插件的使用"></a>扩展功能：第三方Comments插件的使用</h2><h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><h2 id="Markdown语法高亮支持的语言列表"><a href="#Markdown语法高亮支持的语言列表" class="headerlink" title="Markdown语法高亮支持的语言列表"></a>Markdown语法高亮支持的语言列表</h2><p>Markdown可以在引用的 block 里面指定代码 highlight 时候使用的语言，<br><figure class="highlight csharp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// begin code block with " ```csharp " to specify language as C#</span></div><div class="line"><span class="keyword">using</span> System;</div><div class="line"></div><div class="line"><span class="keyword">namespace</span> <span class="title">Demo</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DemoClass</span>: <span class="title">IHighlight</span></div><div class="line">  &#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">string</span> _language;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">GetLanguage</span>(<span class="params"></span>)</span></div><div class="line">    &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>._language;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="comment">// end code block with " ``` "</span></div></pre></td></tr></table></figure></p>
