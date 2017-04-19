@@ -15,18 +15,27 @@
     <meta name="keywords" content="Redis,VS Code,Python," />
   
 
-  <meta name="description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  Server:自己搭建Redis的server,">
+  <meta name="description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  * Server:自己搭建Redis的server">
 <meta name="keywords" content="Redis,VS Code,Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 VS Code + Python Client 访问 Redis">
 <meta property="og:url" content="laomanco.com/2017/04/18/使用client访问Redis/index.html">
 <meta property="og:site_name" content="Laomanco's Blog">
-<meta property="og:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  Server:自己搭建Redis的server,">
+<meta property="og:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  * Server:自己搭建Redis的server">
 <meta property="og:image" content="/2017/04/18/使用client访问Redis/redis_in_windows.svg">
-<meta property="og:updated_time" content="2017-04-19T03:58:03.090Z">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/redis_clients_list.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/redis-py.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/pip_install_redis.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/vscode_python_extension.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/python_editor.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/task_json.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/vscode_config.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/debug_error.png">
+<meta property="og:image" content="/2017/04/18/使用client访问Redis/debug.png">
+<meta property="og:updated_time" content="2017-04-19T09:18:53.533Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 VS Code + Python Client 访问 Redis">
-<meta name="twitter:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  Server:自己搭建Redis的server,">
+<meta name="twitter:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  * Server:自己搭建Redis的server">
 <meta name="twitter:image" content="/2017/04/18/使用client访问Redis/redis_in_windows.svg">
 
   
@@ -134,7 +143,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-Clients-支持的语言"><span class="toc-number">1.</span> <span class="toc-text">Redis Clients 支持的语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-下的环境配置"><span class="toc-number">2.</span> <span class="toc-text">Windows 下的环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Python"><span class="toc-number">2.1.</span> <span class="toc-text">Python</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-Clients-支持的语言"><span class="toc-number">1.</span> <span class="toc-text">Redis Clients 支持的语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-下的环境配置"><span class="toc-number">2.</span> <span class="toc-text">Windows 下的环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-安装"><span class="toc-number">2.1.</span> <span class="toc-text">Python 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过pip安装Redis-package"><span class="toc-number">2.2.</span> <span class="toc-text">通过pip安装Redis package</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用-VS-Code-编辑-Python"><span class="toc-number">3.</span> <span class="toc-text">使用 VS Code 编辑 Python</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装-VS-Code"><span class="toc-number">3.1.</span> <span class="toc-text">安装 VS Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-扩展插件"><span class="toc-number">3.2.</span> <span class="toc-text">Python 扩展插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linting"><span class="toc-number">3.3.</span> <span class="toc-text">Linting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在-VS-Code-里面编辑-Python-脚本"><span class="toc-number">3.4.</span> <span class="toc-text">在 VS Code 里面编辑 Python 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-VS-Code-运行-Python-脚本"><span class="toc-number">3.5.</span> <span class="toc-text">通过 VS Code 运行 Python 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debug"><span class="toc-number">3.6.</span> <span class="toc-text">Debug</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
   </div>
 
 
@@ -175,18 +184,61 @@
       <p>作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在<code>Command line</code> 和 <code>Redis Desktop Manager</code> 这样的 ‘练手’ 阶段，下面我们就以<code>Python Client</code>为例说说Redis编程中的使用。</p>
 <p>我们知道，Redis是一种 <code>Client + Server</code>的模式，所以在实际使用当中，也是分两个部分</p>
 <blockquote>
-<p><strong>Server:</strong><br>自己搭建Redis的server, 建立内存数据库，需要的时候，通过RDB/AOF进行持久化,并且能够通过集群的方式进行扩展。</p>
-<p><strong>Client</strong><br>某种语言的扩展支持，通过package之类的模式import，对服务器进行访问和操作。</p>
+<p><strong>* Server:</strong><br>自己搭建Redis的server, 建立内存数据库，需要的时候，通过RDB/AOF进行持久化,并且能够通过集群的方式进行扩展。</p>
+<p><strong>* Client</strong><br>某种语言的扩展支持，通过package之类的模式import，对服务器进行访问和操作。</p>
 </blockquote>
-<p>```</p>
 <p>Server和Clients的关系如下图所示：</p>
 <p><img src="/2017/04/18/使用client访问Redis/redis_in_windows.svg" alt=""></p>
 <h1 id="Redis-Clients-支持的语言"><a href="#Redis-Clients-支持的语言" class="headerlink" title="Redis Clients 支持的语言"></a>Redis Clients 支持的语言</h1><p>打开Redis的官方网站<a href="https://redis.io/clients" target="_blank" rel="external">Clients的列表</a>，有差不多50种，可以说，Redis几乎支持所有常用的编程语言，这也说明了Redis在如今有多么受欢迎。</p>
-<h1 id="Windows-下的环境配置"><a href="#Windows-下的环境配置" class="headerlink" title="Windows 下的环境配置"></a>Windows 下的环境配置</h1><p>不要问我为什么是windows下的，作为小软的码农，这点狭隘的情怀还是要有的</p>
-<h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><p>Windows下面安装Python很简单， 去官网下载最新的安装文件，一路next基本就好了，需要注意的选项是：</p>
+<p><img src="/2017/04/18/使用client访问Redis/redis_clients_list.png" alt=""></p>
+<h1 id="Windows-下的环境配置"><a href="#Windows-下的环境配置" class="headerlink" title="Windows 下的环境配置"></a>Windows 下的环境配置</h1><p>要问我为什么是windows下的而不是更常用的环境，我只能说，这是作为小软的码农的一点狭隘的情怀了</p>
+<h2 id="Python-安装"><a href="#Python-安装" class="headerlink" title="Python 安装"></a>Python 安装</h2><p>Windows下面安装Python很简单， 去官网下载最新的安装文件，一路next基本就好了，需要注意的选项是：</p>
 <blockquote>
 <p>把python加入到环境变量<br>安装Pip,也就是python的package管理工具，如果vs的nuget，node.js里的npm一样</p>
 </blockquote>
+<h2 id="通过pip安装Redis-package"><a href="#通过pip安装Redis-package" class="headerlink" title="通过pip安装Redis package"></a>通过pip安装Redis package</h2><p>Redis 在每种语言里都有好几种的client可选，拿Python来说，就有Pyredis, redis-py 等十多种，这里选取官方推荐的 redis-py。</p>
+<p><img src="/2017/04/18/使用client访问Redis/redis-py.png" alt=""> </p>
+<p>进入<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="external">redis-py 官方github页面</a>，能看到使用说明。其实也就是一个命令 </p>
+<blockquote>
+<p>$ pip install redis</p>
+</blockquote>
+<p>通过这个命令，就能在本地安装一个python的Redis package了(使用 <em>Administrator</em>权限)。</p>
+<p><img src="/2017/04/18/使用client访问Redis/pip_install_redis.png" alt=""></p>
+<p>安装好以后，进入python的环境import redis就可以访问redis server进行测试了: </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><div class="line">C:\windows\system32&gt;python</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> redis</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>cli = redis.StrictRedis(host=<span class="string">'localhost'</span>, port = <span class="number">6001</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>cli.set(<span class="string">'client name'</span>, <span class="string">'command line'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>cli.get(<span class="string">'client name'</span>)</div><div class="line"><span class="string">b'command line'</span></div></pre></td></tr></table></figure>
+<h1 id="使用-VS-Code-编辑-Python"><a href="#使用-VS-Code-编辑-Python" class="headerlink" title="使用 VS Code 编辑 Python"></a>使用 VS Code 编辑 Python</h1><p>Python 通常是当作一种脚本语言来使用的，是直接被解释使用，而不是被编译的。所以严格意义上讲，Python的IDE应该只是一个调试运行的编辑器。</p>
+<p>网上有很多Python的IDE，比如说著名的Pycharm，但是自从使用了VS Code以后，它就一下子占据了exclusive的位置。 下面说说怎么在VS Code 里面配置使用Python。</p>
+<h2 id="安装-VS-Code"><a href="#安装-VS-Code" class="headerlink" title="安装 VS Code"></a>安装 VS Code</h2><p>去<a href="https://code.visualstudio.com/" target="_blank" rel="external">VS Code 官网</a>下载安装最新版本就可以了。</p>
+<h2 id="Python-扩展插件"><a href="#Python-扩展插件" class="headerlink" title="Python 扩展插件"></a>Python 扩展插件</h2><p>VS Code 对于python的支持是通过 Python的扩展插件来实现的。在extensions里面搜索<code>Python</code>，就可以得到很多的Python插件，像<code>Python</code>, <code>Python for VSCode</code>, <code>MagicPython</code>都可以支持Python, 并且提供语法高亮，引用提示等等功能。</p>
+<p><img src="/2017/04/18/使用client访问Redis/vscode_python_extension.png" alt=""></p>
+<p>安装好以后reload一下，VS Code 里面就可以编辑/运行/调试 Python脚本了。</p>
+<h2 id="Linting"><a href="#Linting" class="headerlink" title="Linting"></a>Linting</h2><p>Linting 是VS Code里面用来分析代码，帮你找出来潜在Warnings/Errors的插件。</p>
+<blockquote>
+<p>Tip: <a href="https://marketplace.visualstudio.com/items?itemName=donjayamanne.python" target="_blank" rel="external">Don Jayamanne’s Python extension</a> gives you the option of using three different linters - <a href="https://www.pylint.org/" target="_blank" rel="external">Pylint</a>, <a href="https://pypi.python.org/pypi/pep8" target="_blank" rel="external">Pep8</a>, and <a href="https://flake8.readthedocs.io/en/latest/" target="_blank" rel="external">Flake8</a>. See the <a href="https://github.com/DonJayamanne/pythonVSCode/wiki/Linting" target="_blank" rel="external">wiki</a> for more details.</p>
+</blockquote>
+<h2 id="在-VS-Code-里面编辑-Python-脚本"><a href="#在-VS-Code-里面编辑-Python-脚本" class="headerlink" title="在 VS Code 里面编辑 Python 脚本"></a>在 VS Code 里面编辑 Python 脚本</h2><p>VS Code 默认情况下只是一个编辑器，如果你想做的只是再一个比较好用的编辑器里面写Python的Script，那打开VS Code 的窗口，然后new 一个新的.py文件，然后进行编辑就可以了，由于安装了extension，VS Code 可以提供很好的语法提示：</p>
+<p><img src="/2017/04/18/使用client访问Redis/python_editor.png" alt=""></p>
+<h2 id="通过-VS-Code-运行-Python-脚本"><a href="#通过-VS-Code-运行-Python-脚本" class="headerlink" title="通过 VS Code 运行 Python 脚本"></a>通过 VS Code 运行 Python 脚本</h2><p>但是当我们需要进一步在VS Code里面直接运行/Debug Python的脚本, 而不需要重新开启一个命令行去运行<code>python xxx.py</code>的时候，就需要用到VS Code 里面的 <code>Task</code>, 它的作用就像是 VS 里面的Solution，通过config文件来指定运行脚本/代码所需要的命令参数等等。</p>
+<p>具体步骤是：</p>
+<ol>
+<li>Open the <strong>Command Palette</strong> (<code>Ctrl+Shift+P</code>).</li>
+<li>Select the <strong>Tasks: Configure Task Runner</strong> command and you will see a list of task runner templates.</li>
+<li>Select <strong>Others</strong> to create a task which runs an external command.</li>
+<li>Change the command to the command line expression you use to build your application (e.g. g++ -g main.cpp).</li>
+<li>Add any required args (e.g. -g to build for debugging).</li>
+<li>You can now build your application with (<code>Ctrl+Shift+B</code>)</li>
+</ol>
+<p>然后就会看到，在你的目录下面，会新生成一个<code>.vscode</code>的子目录，包含了一个<code>task.json</code>文件，对于运行python来说，其内容可以配置成如下的参数，让它运行当前打开的文件：</p>
+<p><img src="/2017/04/18/使用client访问Redis/task_json.png" alt=""></p>
+<p>关于task的设置可以参考<a href="https://code.visualstudio.com/docs/editor/tasks" target="_blank" rel="external">官方文档</a>。一般情况，<code>.vscode</code>目录下面会包含三个config文件：</p>
+<p><img src="/2017/04/18/使用client访问Redis/vscode_config.png" alt=""></p>
+<p>其中<code>tasks.json</code>就是配置运行环境的，<code>settings.json</code>下的配置能够覆盖VS Code的默认配置，<code>launch.json</code>配置调试环境</p>
+<h2 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h2><p>经过上面的步骤，我们已经可以运行Python Scripts了，如果要进行debug的话，可以<code>F5</code>或者从菜单选择 Debug -&gt; Start Debugging。</p>
+<p>但是这时候我们并没有配置<code>launch.json</code>，会提示 <em>Error: Failed to launch the Python Process, please validate the path ‘python’</em></p>
+<p><img src="/2017/04/18/使用client访问Redis/debug_error.png" alt=""></p>
+<p>选择<code>Open launch.json</code> 就会添加一个Python的config文件，然后就能debug了，但是有可能中间需要重启一下VS Code才能生效。</p>
+<p><img src="/2017/04/18/使用client访问Redis/debug.png" alt=""></p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://code.visualstudio.com/docs/languages/python" target="_blank" rel="external">Python on Visual Studio Code</a><br><a href="https://code.visualstudio.com/docs/editor/tasks" target="_blank" rel="external">Integrate with External Tools via Tasks</a><br><a href="http://redisdoc.com/" target="_blank" rel="external">Redis 命令参考</a><br><a href="https://xin053.github.io/2016/06/11/VS%20Code%E6%90%AD%E5%BB%BAPython%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" target="_blank" rel="external">VS Code搭建Python开发环境</a></p>
 
     
   </div>
