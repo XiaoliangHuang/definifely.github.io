@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="laomanco.com/"/>
-  <updated>2017-04-19T02:25:49.748Z</updated>
+  <updated>2017-04-19T02:46:11.000Z</updated>
   <id>laomanco.com/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>VS Code + Python Client 使用 Redis</title>
+    <title>使用Client访问Redis</title>
     <link href="laomanco.com/2017/04/18/%E4%BD%BF%E7%94%A8Client%E8%AE%BF%E9%97%AERedis/"/>
     <id>laomanco.com/2017/04/18/使用Client访问Redis/</id>
     <published>2017-04-18T13:13:54.000Z</published>
-    <updated>2017-04-19T02:25:49.748Z</updated>
+    <updated>2017-04-19T02:46:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在<code>Command line</code> 和 <code>Redis Desktop Manager</code> 这样的 ‘练手’ 阶段，下面我们就以<code>Python Client</code>为例说说Redis编程中的使用。</p>
 <p>我们知道，Redis是一种 <code>Client + Server</code>的模式，所以在实际使用当中，也是分两个部分</p>
@@ -30,7 +30,7 @@
 </blockquote>
 <p>```</p>
 <p>Server和Clients的关系如下图所示：</p>
-<p><img src="/18/使用Client访问Redis/Redis_in_Windows.svg" alt=""></p>
+<p><img src="/18/使用Client访问Redis/redis_in_windows.svg" alt=""></p>
 <h1 id="Redis-Clients-支持的语言"><a href="#Redis-Clients-支持的语言" class="headerlink" title="Redis Clients 支持的语言"></a>Redis Clients 支持的语言</h1><p>打开Redis的官方网站<a href="https://redis.io/clients" target="_blank" rel="external">Clients的列表</a>，有差不多50种，可以说，Redis几乎支持所有常用的编程语言，这也说明了Redis在如今有多么受欢迎。</p>
 <h1 id="Windows-下的环境配置"><a href="#Windows-下的环境配置" class="headerlink" title="Windows 下的环境配置"></a>Windows 下的环境配置</h1><p>不要问我为什么是windows下的，作为小软的码农，这点狭隘的情怀还是要有的</p>
 <h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><p>Windows下面安装Python很简单， 去官网下载最新的安装文件，一路next基本就好了，需要注意的选项是：</p>
@@ -555,9 +555,9 @@
       <category term="声·色" scheme="laomanco.com/categories/%E5%A3%B0%C2%B7%E8%89%B2/"/>
     
     
-      <category term="微软紫竹" scheme="laomanco.com/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
-    
       <category term="足球" scheme="laomanco.com/tags/%E8%B6%B3%E7%90%83/"/>
+    
+      <category term="微软紫竹" scheme="laomanco.com/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
     
       <category term="春季联赛" scheme="laomanco.com/tags/%E6%98%A5%E5%AD%A3%E8%81%94%E8%B5%9B/"/>
     
@@ -604,9 +604,9 @@
       <category term="声·色" scheme="laomanco.com/categories/%E5%A3%B0%C2%B7%E8%89%B2/"/>
     
     
-      <category term="微软紫竹" scheme="laomanco.com/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
-    
       <category term="足球" scheme="laomanco.com/tags/%E8%B6%B3%E7%90%83/"/>
+    
+      <category term="微软紫竹" scheme="laomanco.com/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
     
       <category term="春季联赛" scheme="laomanco.com/tags/%E6%98%A5%E5%AD%A3%E8%81%94%E8%B5%9B/"/>
     
@@ -711,9 +711,9 @@
       <category term="声·色" scheme="laomanco.com/categories/%E5%A3%B0%C2%B7%E8%89%B2/"/>
     
     
-      <category term="微软紫竹" scheme="laomanco.com/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
-    
       <category term="足球" scheme="laomanco.com/tags/%E8%B6%B3%E7%90%83/"/>
+    
+      <category term="微软紫竹" scheme="laomanco.com/tags/%E5%BE%AE%E8%BD%AF%E7%B4%AB%E7%AB%B9/"/>
     
       <category term="历史" scheme="laomanco.com/tags/%E5%8E%86%E5%8F%B2/"/>
     
@@ -747,9 +747,9 @@
       <category term="声·色" scheme="laomanco.com/categories/%E5%A3%B0%C2%B7%E8%89%B2/"/>
     
     
-      <category term="足球" scheme="laomanco.com/tags/%E8%B6%B3%E7%90%83/"/>
-    
       <category term="欧冠" scheme="laomanco.com/tags/%E6%AC%A7%E5%86%A0/"/>
+    
+      <category term="足球" scheme="laomanco.com/tags/%E8%B6%B3%E7%90%83/"/>
     
   </entry>
   
