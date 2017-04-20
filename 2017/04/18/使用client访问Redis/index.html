@@ -15,13 +15,13 @@
     <meta name="keywords" content="Redis,VS Code,Python," />
   
 
-  <meta name="description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client Lib为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  * Server:自己搭建Redis的se">
+  <meta name="description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client Lib为例说说Redis编程中的使用。 Redis 的 Client/Server结构我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分">
 <meta name="keywords" content="Redis,VS Code,Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 VS Code + Python Client Lib 访问 Redis">
 <meta property="og:url" content="laomanco.com/2017/04/18/使用client访问Redis/index.html">
 <meta property="og:site_name" content="Laomanco's Blog">
-<meta property="og:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client Lib为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  * Server:自己搭建Redis的se">
+<meta property="og:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client Lib为例说说Redis编程中的使用。 Redis 的 Client/Server结构我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分">
 <meta property="og:image" content="/2017/04/18/使用client访问Redis/redis_in_windows.svg">
 <meta property="og:image" content="/2017/04/18/使用client访问Redis/redis_clients_list.png">
 <meta property="og:image" content="/2017/04/18/使用client访问Redis/redis-py.png">
@@ -32,10 +32,10 @@
 <meta property="og:image" content="/2017/04/18/使用client访问Redis/vscode_config.png">
 <meta property="og:image" content="/2017/04/18/使用client访问Redis/debug_error.png">
 <meta property="og:image" content="/2017/04/18/使用client访问Redis/debug.png">
-<meta property="og:updated_time" content="2017-04-20T03:41:05.208Z">
+<meta property="og:updated_time" content="2017-04-20T03:45:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 VS Code + Python Client Lib 访问 Redis">
-<meta name="twitter:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client Lib为例说说Redis编程中的使用。 我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分  * Server:自己搭建Redis的se">
+<meta name="twitter:description" content="作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在Command line 和 Redis Desktop Manager 这样的 ‘练手’ 阶段，下面我们就以Python Client Lib为例说说Redis编程中的使用。 Redis 的 Client/Server结构我们知道，Redis是一种 Client + Server的模式，所以在实际使用当中，也是分两个部分">
 <meta name="twitter:image" content="/2017/04/18/使用client访问Redis/redis_in_windows.svg">
 
   
@@ -143,7 +143,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-Client-Lib-支持的语言"><span class="toc-number">1.</span> <span class="toc-text">Redis Client Lib 支持的语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-下的环境配置"><span class="toc-number">2.</span> <span class="toc-text">Windows 下的环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-安装"><span class="toc-number">2.1.</span> <span class="toc-text">Python 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过pip安装Redis-package"><span class="toc-number">2.2.</span> <span class="toc-text">通过pip安装Redis package</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用-VS-Code-编辑-Python"><span class="toc-number">3.</span> <span class="toc-text">使用 VS Code 编辑 Python</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装-VS-Code"><span class="toc-number">3.1.</span> <span class="toc-text">安装 VS Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-扩展插件"><span class="toc-number">3.2.</span> <span class="toc-text">Python 扩展插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linting"><span class="toc-number">3.3.</span> <span class="toc-text">Linting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在-VS-Code-里面编辑-Python-脚本"><span class="toc-number">3.4.</span> <span class="toc-text">在 VS Code 里面编辑 Python 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-VS-Code-运行-Python-脚本"><span class="toc-number">3.5.</span> <span class="toc-text">通过 VS Code 运行 Python 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debug"><span class="toc-number">3.6.</span> <span class="toc-text">Debug</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-的-Client-Server结构"><span class="toc-number">1.</span> <span class="toc-text">Redis 的 Client/Server结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-Client-Lib-支持的语言"><span class="toc-number">2.</span> <span class="toc-text">Redis Client Lib 支持的语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-下的环境配置"><span class="toc-number">3.</span> <span class="toc-text">Windows 下的环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-安装"><span class="toc-number">3.1.</span> <span class="toc-text">Python 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过pip安装Redis-package"><span class="toc-number">3.2.</span> <span class="toc-text">通过pip安装Redis package</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用-VS-Code-编辑-Python"><span class="toc-number">4.</span> <span class="toc-text">使用 VS Code 编辑 Python</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装-VS-Code"><span class="toc-number">4.1.</span> <span class="toc-text">安装 VS Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-扩展插件"><span class="toc-number">4.2.</span> <span class="toc-text">Python 扩展插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linting"><span class="toc-number">4.3.</span> <span class="toc-text">Linting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在-VS-Code-里面编辑-Python-脚本"><span class="toc-number">4.4.</span> <span class="toc-text">在 VS Code 里面编辑 Python 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-VS-Code-运行-Python-脚本"><span class="toc-number">4.5.</span> <span class="toc-text">通过 VS Code 运行 Python 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debug"><span class="toc-number">4.6.</span> <span class="toc-text">Debug</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li></ol>
   </div>
 
 
@@ -182,7 +182,7 @@
   <div class="article-content">
     
       <p>作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在<code>Command line</code> 和 <code>Redis Desktop Manager</code> 这样的 ‘练手’ 阶段，下面我们就以<code>Python Client Lib</code>为例说说Redis编程中的使用。</p>
-<p>我们知道，Redis是一种 <code>Client + Server</code>的模式，所以在实际使用当中，也是分两个部分</p>
+<h1 id="Redis-的-Client-Server结构"><a href="#Redis-的-Client-Server结构" class="headerlink" title="Redis 的 Client/Server结构"></a>Redis 的 Client/Server结构</h1><p>我们知道，Redis是一种 <code>Client + Server</code>的模式，所以在实际使用当中，也是分两个部分</p>
 <blockquote>
 <p><strong>* Server:</strong><br>自己搭建Redis的server, 建立内存数据库，需要的时候，通过RDB/AOF进行持久化,并且能够通过集群的方式进行扩展。</p>
 <p><strong>* Client</strong><br>Client广义上面讲应该是访问Server的工具，可以是命令行，可以是带GUI的工具，更多的是Client Libs, 也就是某种语言的扩展支持，通过package之类的模式import，对服务器进行访问和操作，这里要介绍的Python Client其实也是Client Libs的一种。</p>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="laomanco.com/"/>
-  <updated>2017-04-20T03:41:05.208Z</updated>
+  <updated>2017-04-20T03:45:06.000Z</updated>
   <id>laomanco.com/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="laomanco.com/2017/04/18/%E4%BD%BF%E7%94%A8client%E8%AE%BF%E9%97%AERedis/"/>
     <id>laomanco.com/2017/04/18/使用client访问Redis/</id>
     <published>2017-04-18T13:13:54.000Z</published>
-    <updated>2017-04-20T03:41:05.208Z</updated>
+    <updated>2017-04-20T03:45:06.000Z</updated>
     
     <content type="html"><![CDATA[<p>作为一种缓存工具, Redis 肯定需要结合我们的产品进行使用，而不是停留在<code>Command line</code> 和 <code>Redis Desktop Manager</code> 这样的 ‘练手’ 阶段，下面我们就以<code>Python Client Lib</code>为例说说Redis编程中的使用。</p>
-<p>我们知道，Redis是一种 <code>Client + Server</code>的模式，所以在实际使用当中，也是分两个部分</p>
+<h1 id="Redis-的-Client-Server结构"><a href="#Redis-的-Client-Server结构" class="headerlink" title="Redis 的 Client/Server结构"></a>Redis 的 Client/Server结构</h1><p>我们知道，Redis是一种 <code>Client + Server</code>的模式，所以在实际使用当中，也是分两个部分</p>
 <blockquote>
 <p><strong>* Server:</strong><br>自己搭建Redis的server, 建立内存数据库，需要的时候，通过RDB/AOF进行持久化,并且能够通过集群的方式进行扩展。</p>
 <p><strong>* Client</strong><br>Client广义上面讲应该是访问Server的工具，可以是命令行，可以是带GUI的工具，更多的是Client Libs, 也就是某种语言的扩展支持，通过package之类的模式import，对服务器进行访问和操作，这里要介绍的Python Client其实也是Client Libs的一种。</p>
