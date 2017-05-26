@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="laomanco.com/"/>
-  <updated>2017-05-16T10:38:41.676Z</updated>
+  <updated>2017-05-26T13:24:03.590Z</updated>
   <id>laomanco.com/</id>
   
   <author>
@@ -14,6 +14,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>静态代码分析</title>
+    <link href="laomanco.com/2017/05/26/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>laomanco.com/2017/05/26/静态代码分析/</id>
+    <published>2017-05-26T13:18:10.000Z</published>
+    <updated>2017-05-26T13:24:03.590Z</updated>
+    
+    <content type="html"><![CDATA[<p>静态代码分析，是code质量控制里面的一种方法，主要是分析代码本身的一些问题。比如说语法，约定的编码风格，build 和 reference等等。本文主要从下面三个方面进行介绍</p>
+<ul>
+<li>代码质量控制</li>
+<li>静态代码分析</li>
+<li>SCA工具和例子</li>
+</ul>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><img src="/2017/05/26/静态代码分析/SCA.svg" alt=""></p>
+<p>#代码质量控制#</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;静态代码分析，是code质量控制里面的一种方法，主要是分析代码本身的一些问题。比如说语法，约定的编码风格，build 和 reference等等。本文主要从下面三个方面进行介绍&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代码质量控制&lt;/li&gt;
+&lt;li&gt;静态代码分析&lt;/li&gt;
+&lt;li&gt;SCA
+    
+    </summary>
+    
+      <category term="技术" scheme="laomanco.com/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="SCA" scheme="laomanco.com/tags/SCA/"/>
+    
+  </entry>
   
   <entry>
     <title>RPC 总结</title>
