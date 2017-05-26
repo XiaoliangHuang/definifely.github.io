@@ -15,18 +15,27 @@
     <meta name="keywords" content="SCA," />
   
 
-  <meta name="description" content="静态代码分析，是code质量控制里面的一种方法，主要是分析代码本身的一些问题。比如说语法，约定的编码风格，build 和 reference等等。本文主要从下面三个方面进行介绍  代码质量控制 静态代码分析 SCA工具和例子  概述 #代码质量控制#">
+  <meta name="description" content="概述静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null reference等等。 而问题的发现和修复，肯定是越早越好，统计证明（我也不知道他们是哪里的统计数据），在整个软件开发生命周期中，30% 至 70% 的代码逻">
 <meta name="keywords" content="SCA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="静态代码分析">
 <meta property="og:url" content="laomanco.com/2017/05/26/静态代码分析/index.html">
 <meta property="og:site_name" content="Laomanco&#39;s Blog">
-<meta property="og:description" content="静态代码分析，是code质量控制里面的一种方法，主要是分析代码本身的一些问题。比如说语法，约定的编码风格，build 和 reference等等。本文主要从下面三个方面进行介绍  代码质量控制 静态代码分析 SCA工具和例子  概述 #代码质量控制#">
+<meta property="og:description" content="概述静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null reference等等。 而问题的发现和修复，肯定是越早越好，统计证明（我也不知道他们是哪里的统计数据），在整个软件开发生命周期中，30% 至 70% 的代码逻">
 <meta property="og:image" content="/2017/05/26/静态代码分析/SCA.svg">
-<meta property="og:updated_time" content="2017-05-26T13:24:03.590Z">
+<meta property="og:image" content="/2017/05/26/静态代码分析/bug_types.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/fortify.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/sonar.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/sonarconfig.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/scanresult.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/detectedbug.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/vsplugin.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/vsconfig.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/run_in_vs.png">
+<meta property="og:updated_time" content="2017-05-26T15:04:48.493Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="静态代码分析">
-<meta name="twitter:description" content="静态代码分析，是code质量控制里面的一种方法，主要是分析代码本身的一些问题。比如说语法，约定的编码风格，build 和 reference等等。本文主要从下面三个方面进行介绍  代码质量控制 静态代码分析 SCA工具和例子  概述 #代码质量控制#">
+<meta name="twitter:description" content="概述静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null reference等等。 而问题的发现和修复，肯定是越早越好，统计证明（我也不知道他们是哪里的统计数据），在整个软件开发生命周期中，30% 至 70% 的代码逻">
 <meta name="twitter:image" content="/2017/05/26/静态代码分析/SCA.svg">
 
   
@@ -134,7 +143,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码质量控制"><span class="toc-number">2.</span> <span class="toc-text">代码质量控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码缺陷的分类"><span class="toc-number">2.1.</span> <span class="toc-text">代码缺陷的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析方法"><span class="toc-number">2.2.</span> <span class="toc-text">分析方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#静态代码分析"><span class="toc-number">3.</span> <span class="toc-text">静态代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA-工具"><span class="toc-number">3.1.</span> <span class="toc-text">SCA 工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA的用途"><span class="toc-number">3.2.</span> <span class="toc-text">SCA的用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA工具的结构"><span class="toc-number">3.3.</span> <span class="toc-text">SCA工具的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#以-SonarQube-为例介绍-SCA"><span class="toc-number">3.4.</span> <span class="toc-text">以 SonarQube 为例介绍 SCA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装使用"><span class="toc-number">3.4.1.</span> <span class="toc-text">安装使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VS-插件"><span class="toc-number">3.4.2.</span> <span class="toc-text">VS 插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SCM-集成"><span class="toc-number">3.4.3.</span> <span class="toc-text">SCM 集成</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
   </div>
 
 
@@ -172,14 +181,93 @@
 
   <div class="article-content">
     
-      <p>静态代码分析，是code质量控制里面的一种方法，主要是分析代码本身的一些问题。比如说语法，约定的编码风格，build 和 reference等等。本文主要从下面三个方面进行介绍</p>
+      <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null reference等等。</p>
+<p>而问题的发现和修复，肯定是越早越好，<a href="http://blog.csdn.net/wetest_tencent/article/details/51516347" target="_blank" rel="external">统计证明</a>（我也不知道他们是哪里的统计数据），在整个软件开发生命周期中，30% 至 70% 的代码逻辑设计和编码缺陷是可以通过静态代码分析来发现和修复的。除了编译器的error以外，很多的IDE和plugin，比如说VS,Resharper都是集成了一些扫描规则的。</p>
+<p>但是除了提示以外，SCA 还有更多的作用。</p>
+<p><img src="/2017/05/26/静态代码分析/SCA.svg" alt=""></p>
+<h1 id="代码质量控制"><a href="#代码质量控制" class="headerlink" title="代码质量控制"></a>代码质量控制</h1><h2 id="代码缺陷的分类"><a href="#代码缺陷的分类" class="headerlink" title="代码缺陷的分类"></a>代码缺陷的分类</h2><p>根据SonarQebe上面的解释， 技术债主要是由于下面<a href="http://www.infoq.com/cn/news/2015/05/sonarqube-VS" target="_blank" rel="external">七种原罪</a>产生</p>
 <ul>
-<li>代码质量控制</li>
-<li>静态代码分析</li>
-<li>SCA工具和例子</li>
+<li>重复 </li>
+<li>糟糕的复杂性分布 </li>
+<li>意大利面式设计风格 </li>
+<li>缺少单元测试 </li>
+<li>缺乏代码标准 </li>
+<li>潜在的bug </li>
+<li>注释不足或过多，或者干脆不正确（单元测试对这种类型的bug无能为力）</li>
 </ul>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><img src="/2017/05/26/静态代码分析/SCA.svg" alt=""></p>
-<p>#代码质量控制#</p>
+<p>而进一步细分下去，可以分成下面几种</p>
+<ul>
+<li><strong>致命类*：</strong> 可能导致程序宕机、无响应等影响范围极大的错误；</li>
+<li><strong>逻辑类：</strong> 可能造成程序不能达到预期逻辑结果的错误；</li>
+<li><strong>编码规范及其他类：</strong> 可能造成程序的可读性、可维护性较差的错误（不可达代码，无效的变量声明等）； </li>
+</ul>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/bug_types.png" width="60%" align="center"><br></div>
+
+<h2 id="分析方法"><a href="#分析方法" class="headerlink" title="分析方法"></a>分析方法</h2><p>要分析发现code里面的bug，通常有静态/动态/人肉三种方法：</p>
+<ul>
+<li><strong>静态分析：</strong> 通过语法，特定规则进行分析，以及通过build是否能够通过来检查dependence/reference关系等等</li>
+<li><strong>动态分析： </strong> 通过test case，在local，sanbox，prod等环境进行scenario测试， 还有performance的测试等等。</li>
+<li><strong>人肉：</strong> Code Review， 以及在搭好的环境进行的各种人肉操作</li>
+</ul>
+<h1 id="静态代码分析"><a href="#静态代码分析" class="headerlink" title="静态代码分析"></a>静态代码分析</h1><h2 id="SCA-工具"><a href="#SCA-工具" class="headerlink" title="SCA 工具"></a>SCA 工具</h2><p>SCA 作为一种质量控制的方法，已经很多有效的工具，比如说HP的收费软件Fority, 已经是很多公司Compliance/Security的标准。还有SonarQube这样好用而且免费的工具，也有Code Analysis这样专门给VS一种IDE所做的插件。</p>
+<h2 id="SCA的用途"><a href="#SCA的用途" class="headerlink" title="SCA的用途"></a>SCA的用途</h2><p>整体来说，SCA工具所起到的作用有下面几种</p>
+<ul>
+<li>扫描发现code里面的bug</li>
+<li>和IDE集成，实施提醒码农们潜在的问题</li>
+<li>产品上面控制特定的代码风格</li>
+<li>和Build Server， Git/TFS之类的tools进行集成，作为checkin的先决条件</li>
+</ul>
+<h2 id="SCA工具的结构"><a href="#SCA工具的结构" class="headerlink" title="SCA工具的结构"></a>SCA工具的结构</h2><p><a href="https://microsoft.sharepoint.com/sites/infopedia/Media/details/aevd-3-66853" target="_blank" rel="external">下面的图</a>给出了Fortify的基本结构，这也是大多数SCA工具的整体结构</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/fortify.png" width="100%" align="center"><br></div>
+
+<ul>
+<li><code>Develop</code> 是local环境，用来扫描代码。</li>
+<li><code>Fortify Server</code> 是用来存储分析展示代码扫描结果的地方，可以是local server，也可以是某个online server</li>
+<li><code>Build Server</code> 则是专门定期build以检验代码质量的地方</li>
+<li><code>ACE Analyst</code> 上面，则可以里面Fortify Server的数据进行进一步的分析</li>
+</ul>
+<h2 id="以-SonarQube-为例介绍-SCA"><a href="#以-SonarQube-为例介绍-SCA" class="headerlink" title="以 SonarQube 为例介绍 SCA"></a>以 SonarQube 为例介绍 SCA</h2><p>前面也提到过，SonarQube （<a href="https://sonarqube.com/about" target="_blank" rel="external">官网</a>）是一种开源的SCA工具，支持绝大多数的编程语言，通过plugin的方式，这些工具可以进行扩展，而且支持IDE和SCM工具的集成，自带的分析结果可读性也很好。</p>
+<p><img src="/2017/05/26/静态代码分析/sonar.png" alt=""></p>
+<h3 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h3><p>Qube的安装使用，网上有很多教程，官网也有介绍，非常简单。主要包含下面几个部分</p>
+<ul>
+<li><p><code>Sonar Server</code>:  SonarQube 提供了一个local的安装包，是基于Java 的，所以需要安装JDK, 只需要下载以后，解压运行一条命令就可以了。因为是非安装方式，所以windows下面需要添加一些环境变量到path里面。另外，现在SonarQube自己也提供了online的server，用github帐号登录以后，只需要在scanner里面设置对应的login 和server url 信息就可以使用了。</p>
+</li>
+<li><p><code>Scanner</code> ： SonarQuebe 提供了各种语言的scanner，比如 C# , 就有对应的<a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+MSBuild" target="_blank" rel="external">SonarQube Scanner for MSBuild</a>,<br>下载解压以后，在project目录下面运行几条命令，就可以对你的project进行分析，并上传结果到 Sonar Server了</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">SonarQube.Scanner.MSBuild.exe begin /k:<span class="string">"org.sonarqube:sonarqube-scanner-msbuild"</span> /n:<span class="string">"Project Name"</span> /v:<span class="string">"1.0"</span></div><div class="line">MSBuild.exe /t:Rebuild</div><div class="line">SonarQube.Scanner.MSBuild.exe end</div></pre></td></tr></table></figure>
+<p>除了在命令行里面指定以外，还可以通过<code>SonarQube.Analysis.xml</code> 的 Config 文件来配置单个project或者全局的参数配置了。</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/sonarconfig.png" width="100%" align="center"><br></div>
+
+<p>这就是最基本的sonar解构了，使用起来是不是非常简单。下面是一个project的扫描结果</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/scanresult.png" width="100%" align="center"><br></div>
+
+<p>点开里面的细节，可以看到，通过 Sonar,还是可以发现一些code里面被忽视的问题的， 但是我自己故意设置了一个duplicated的method，居然没有被检测到。所以检测的质量到底如何，还有待考察，毕竟不是商业软件。</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/detectedbug.png" width="100%" align="center"><br></div>
+
+<h3 id="VS-插件"><a href="#VS-插件" class="headerlink" title="VS 插件"></a>VS 插件</h3><p>此外，SonarQube 的还有 VS 的插件, 能够提供实时的提示，以及在project上面右键选择一下就能生产扫描报告的便利操作。在tools-&gt;extension and updates 里面输入sonar，就能搜到相关的插件</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/vsplugin.png" width="100%" align="center"><br></div>
+
+<p>安装以后，会多出来一个sonar的菜单，里面可以配置connection的 url等信息</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/vsconfig.png" width="100%" align="center"><br></div>
+
+<p>在team explorer 也能看到相关的配置。然后再solution上面右键单击，弹出来的菜单里面，就会有<code>SQ: Run Fill Analysis</code> <code>SQ: Run Preview Analysis</code> 的选项。</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/run_in_vs.png" width="100%" align="center"><br></div>
+
+
+<p>选中以后，运行，然后就能在对于的Server 里面看到结果了。</p>
+<h3 id="SCM-集成"><a href="#SCM-集成" class="headerlink" title="SCM 集成"></a>SCM 集成</h3><p>SCA 的另外一个作用就是跟source control，或者build system 进行集成，比如 Git， TFS, 然后作为chekcin的条件，不过这部分还没有测试过，就暂且略过。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过前面的分析和例子，对于SCA已经有了一定了认识，那么一个SCA系统/工具，需要满足那些需求呢？</p>
+<ul>
+<li>分析效果: 运行的速度，能否检测到存在的问题，不存在的问题是否会误报</li>
+<li>使用成本小：使用起来要非常快速，最好不需要对原来的code有任何影响</li>
+<li>语言的支持： 可以支持多少种语言</li>
+<li>扩展： 通过plugin进行扩展</li>
+<li>规则的定义： 包含了哪些规则，是否可以自己定制</li>
+<li>对IDE的集成</li>
+<li>跟SCM系统的集成</li>
+<li>结果分析展示（UI）</li>
+</ul>
 
     
   </div>
