@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="laomanco.com/"/>
-  <updated>2017-05-26T15:04:48.493Z</updated>
+  <updated>2017-05-26T15:40:43.024Z</updated>
   <id>laomanco.com/</id>
   
   <author>
@@ -20,9 +20,10 @@
     <link href="laomanco.com/2017/05/26/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/"/>
     <id>laomanco.com/2017/05/26/静态代码分析/</id>
     <published>2017-05-26T13:18:10.000Z</published>
-    <updated>2017-05-26T15:04:48.493Z</updated>
+    <updated>2017-05-26T15:40:43.024Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null reference等等。</p>
+    <content type="html"><![CDATA[<p>最近工作当，一个项目里面用到了SonarQube和Fortify, 于是去了解了一下静态代码分析（Static Code Analysis）。</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null reference等等。</p>
 <p>而问题的发现和修复，肯定是越早越好，<a href="http://blog.csdn.net/wetest_tencent/article/details/51516347" target="_blank" rel="external">统计证明</a>（我也不知道他们是哪里的统计数据），在整个软件开发生命周期中，30% 至 70% 的代码逻辑设计和编码缺陷是可以通过静态代码分析来发现和修复的。除了编译器的error以外，很多的IDE和plugin，比如说VS,Resharper都是集成了一些扫描规则的。</p>
 <p>但是除了提示以外，SCA 还有更多的作用。</p>
 <p><img src="/2017/05/26/静态代码分析/SCA.svg" alt=""></p>
@@ -109,11 +110,13 @@
 <li>跟SCM系统的集成</li>
 <li>结果分析展示（UI）</li>
 </ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://sonarqube.com/about" target="_blank" rel="external">SonarQube 官网</a><br><a href="http://www.infoq.com/cn/news/2015/05/sonarqube-VS" target="_blank" rel="external">使用SonarQube和Visual Studio减轻技术债</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-sonar/" target="_blank" rel="external">使用 Sonar 进行代码质量管理</a><br><a href="http://blog.csdn.net/wetest_tencent/article/details/51516347" target="_blank" rel="external">C++代码质量扫描主流工具深度比较</a><br><a href="https://microsoft.sharepoint.com/sites/infopedia/Media/details/aevd-3-66853" target="_blank" rel="external">Introduction to Fortify</a><br><a href="http://blog.csdn.net/whatday/article/details/54146738" target="_blank" rel="external">三款主流静态源代码安全检测工具比较</a><br><a href="http://blog.csdn.net/michaelzhaozero/article/details/42066569" target="_blank" rel="external">Jenkins+maven+git+sonar 系统持续集成&amp;代码单测管理</a></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出
+      &lt;p&gt;最近工作当，一个项目里面用到了SonarQube和Fortify, 于是去了解了一下静态代码分析（Static Code Analysis）。&lt;/p&gt;
+&lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概
     
     </summary>
     
