@@ -7,23 +7,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>静态代码分析 | Laomanco&#39;s Blog</title>
+  <title>静态代码分析和工具介绍 | Laomanco&#39;s Blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="SCA," />
+    <meta name="keywords" content="SCA,Fortify,SonarQube," />
   
 
   <meta name="description" content="最近工作当，一个项目里面用到了SonarQube和Fortify, 于是去了解了一下静态代码分析（Static Code Analysis）。 概述静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null referenc">
-<meta name="keywords" content="SCA">
+<meta name="keywords" content="SCA,Fortify,SonarQube">
 <meta property="og:type" content="article">
-<meta property="og:title" content="静态代码分析">
+<meta property="og:title" content="静态代码分析和工具介绍">
 <meta property="og:url" content="laomanco.com/2017/05/26/静态代码分析/index.html">
 <meta property="og:site_name" content="Laomanco&#39;s Blog">
 <meta property="og:description" content="最近工作当，一个项目里面用到了SonarQube和Fortify, 于是去了解了一下静态代码分析（Static Code Analysis）。 概述静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null referenc">
 <meta property="og:image" content="/2017/05/26/静态代码分析/SCA.svg">
 <meta property="og:image" content="/2017/05/26/静态代码分析/bug_types.png">
+<meta property="og:image" content="/2017/05/26/静态代码分析/rules.png">
 <meta property="og:image" content="/2017/05/26/静态代码分析/fortify.png">
 <meta property="og:image" content="/2017/05/26/静态代码分析/sonar.png">
 <meta property="og:image" content="/2017/05/26/静态代码分析/sonarconfig.png">
@@ -32,9 +33,9 @@
 <meta property="og:image" content="/2017/05/26/静态代码分析/vsplugin.png">
 <meta property="og:image" content="/2017/05/26/静态代码分析/vsconfig.png">
 <meta property="og:image" content="/2017/05/26/静态代码分析/run_in_vs.png">
-<meta property="og:updated_time" content="2017-05-26T15:40:43.024Z">
+<meta property="og:updated_time" content="2017-05-27T03:00:47.134Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="静态代码分析">
+<meta name="twitter:title" content="静态代码分析和工具介绍">
 <meta name="twitter:description" content="最近工作当，一个项目里面用到了SonarQube和Fortify, 于是去了解了一下静态代码分析（Static Code Analysis）。 概述静态代码分析，是code质量控制里面的一种方法，指无需运行被测代码，通过词法分析、语法分析、控制流、数据流分析等技术对程序代码进行扫描，找出代码隐藏的错误和缺陷。如参数不匹配，有歧义的嵌套语句，错误的递归，非法计算，可能出现的null referenc">
 <meta name="twitter:image" content="/2017/05/26/静态代码分析/SCA.svg">
 
@@ -143,7 +144,7 @@
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码质量控制"><span class="toc-number">2.</span> <span class="toc-text">代码质量控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码缺陷的分类"><span class="toc-number">2.1.</span> <span class="toc-text">代码缺陷的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析方法"><span class="toc-number">2.2.</span> <span class="toc-text">分析方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#静态代码分析"><span class="toc-number">3.</span> <span class="toc-text">静态代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA-工具"><span class="toc-number">3.1.</span> <span class="toc-text">SCA 工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA的用途"><span class="toc-number">3.2.</span> <span class="toc-text">SCA的用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA工具的结构"><span class="toc-number">3.3.</span> <span class="toc-text">SCA工具的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#以-SonarQube-为例介绍-SCA"><span class="toc-number">3.4.</span> <span class="toc-text">以 SonarQube 为例介绍 SCA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装使用"><span class="toc-number">3.4.1.</span> <span class="toc-text">安装使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VS-插件"><span class="toc-number">3.4.2.</span> <span class="toc-text">VS 插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SCM-集成"><span class="toc-number">3.4.3.</span> <span class="toc-text">SCM 集成</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码质量控制"><span class="toc-number">2.</span> <span class="toc-text">代码质量控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码缺陷的分类"><span class="toc-number">2.1.</span> <span class="toc-text">代码缺陷的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析方法"><span class="toc-number">2.2.</span> <span class="toc-text">分析方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SCA-的原理"><span class="toc-number">3.</span> <span class="toc-text">SCA 的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码扫描"><span class="toc-number">3.1.</span> <span class="toc-text">代码扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则定义"><span class="toc-number">3.2.</span> <span class="toc-text">规则定义</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#静态代码分析的工具"><span class="toc-number">4.</span> <span class="toc-text">静态代码分析的工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA-成熟工具"><span class="toc-number">4.1.</span> <span class="toc-text">SCA 成熟工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA-工具的用途"><span class="toc-number">4.2.</span> <span class="toc-text">SCA 工具的用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SCA工具的结构"><span class="toc-number">4.3.</span> <span class="toc-text">SCA工具的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#以-SonarQube-为例介绍-SCA"><span class="toc-number">4.4.</span> <span class="toc-text">以 SonarQube 为例介绍 SCA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装使用"><span class="toc-number">4.4.1.</span> <span class="toc-text">安装使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VS-插件"><span class="toc-number">4.4.2.</span> <span class="toc-text">VS 插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SCM-集成"><span class="toc-number">4.4.3.</span> <span class="toc-text">SCM 集成</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">6.</span> <span class="toc-text">Reference</span></a></li></ol>
   </div>
 
 
@@ -151,7 +152,7 @@
 <div class="content content-post CENTER">
    <article id="post-静态代码分析" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">静态代码分析</h1>
+    <h1 class="post-title">静态代码分析和工具介绍</h1>
 
     <div class="article-meta">
       <span>
@@ -210,11 +211,17 @@
 <li><strong>动态分析： </strong> 通过test case，在local，sanbox，prod等环境进行scenario测试， 还有performance的测试等等。</li>
 <li><strong>人肉：</strong> Code Review， 以及在搭好的环境进行的各种人肉操作</li>
 </ul>
-<h1 id="静态代码分析"><a href="#静态代码分析" class="headerlink" title="静态代码分析"></a>静态代码分析</h1><h2 id="SCA-工具"><a href="#SCA-工具" class="headerlink" title="SCA 工具"></a>SCA 工具</h2><p>SCA 作为一种质量控制的方法，已经很多有效的工具，比如说HP的收费软件Fority, 已经是很多公司Compliance/Security的标准。还有SonarQube这样好用而且免费的工具，也有Code Analysis这样专门给VS一种IDE所做的插件。</p>
-<h2 id="SCA的用途"><a href="#SCA的用途" class="headerlink" title="SCA的用途"></a>SCA的用途</h2><p>整体来说，SCA工具所起到的作用有下面几种</p>
+<h1 id="SCA-的原理"><a href="#SCA-的原理" class="headerlink" title="SCA 的原理"></a>SCA 的原理</h1><p>SCA的原理主要是通过语法词法分析来扫描代码，然后检查预定义的规则，看是否匹配。所以这里就涉及到两个方面：</p>
+<h2 id="代码扫描"><a href="#代码扫描" class="headerlink" title="代码扫描"></a>代码扫描</h2><p>这里就涉及到编译原理，语法，词法分析等知识，以后有时间再来深入研究。</p>
+<h2 id="规则定义"><a href="#规则定义" class="headerlink" title="规则定义"></a>规则定义</h2><p>针对每一种语言，SCA工具都需要定义一套规则，一部分是消除程序的 bug， 另外一部分则是代码风格。下面的截图展示了<a href="https://sonarqube.com/coding_rules#languages=cs" target="_blank" rel="external">SonarQube里面C#的部分规则</a>。</p>
+<div align="center"><br><img src="/2017/05/26/静态代码分析/rules.png" width="100%" align="center"><br></div>
+
+<h1 id="静态代码分析的工具"><a href="#静态代码分析的工具" class="headerlink" title="静态代码分析的工具"></a>静态代码分析的工具</h1><h2 id="SCA-成熟工具"><a href="#SCA-成熟工具" class="headerlink" title="SCA 成熟工具"></a>SCA 成熟工具</h2><p>SCA 作为一种质量控制的方法，已经很多有效的工具，比如说HP的收费软件Fority, 已经是很多公司Compliance/Security的标准。还有SonarQube这样好用而且免费的工具，也有Code Analysis这样专门给VS一种IDE所做的插件。</p>
+<p>除了这些以外，还有很多商业的开源的，跨平台的或者针对某种特殊语言的SCA工具，可以参见reference。</p>
+<h2 id="SCA-工具的用途"><a href="#SCA-工具的用途" class="headerlink" title="SCA 工具的用途"></a>SCA 工具的用途</h2><p>整体来说，SCA工具所起到的作用有下面几种</p>
 <ul>
 <li>扫描发现code里面的bug</li>
-<li>和IDE集成，实施提醒码农们潜在的问题</li>
+<li>和IDE集成，及时提醒码农们潜在的问题</li>
 <li>产品上面控制特定的代码风格</li>
 <li>和Build Server， Git/TFS之类的tools进行集成，作为checkin的先决条件</li>
 </ul>
@@ -269,7 +276,7 @@
 <li>跟SCM系统的集成</li>
 <li>结果分析展示（UI）</li>
 </ul>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://sonarqube.com/about" target="_blank" rel="external">SonarQube 官网</a><br><a href="http://www.infoq.com/cn/news/2015/05/sonarqube-VS" target="_blank" rel="external">使用SonarQube和Visual Studio减轻技术债</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-sonar/" target="_blank" rel="external">使用 Sonar 进行代码质量管理</a><br><a href="http://blog.csdn.net/wetest_tencent/article/details/51516347" target="_blank" rel="external">C++代码质量扫描主流工具深度比较</a><br><a href="https://microsoft.sharepoint.com/sites/infopedia/Media/details/aevd-3-66853" target="_blank" rel="external">Introduction to Fortify</a><br><a href="http://blog.csdn.net/whatday/article/details/54146738" target="_blank" rel="external">三款主流静态源代码安全检测工具比较</a><br><a href="http://blog.csdn.net/michaelzhaozero/article/details/42066569" target="_blank" rel="external">Jenkins+maven+git+sonar 系统持续集成&amp;代码单测管理</a></p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://sonarqube.com/about" target="_blank" rel="external">SonarQube 官网</a><br><a href="http://www.infoq.com/cn/news/2015/05/sonarqube-VS" target="_blank" rel="external">使用SonarQube和Visual Studio减轻技术债</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-sonar/" target="_blank" rel="external">使用 Sonar 进行代码质量管理</a><br><a href="http://blog.csdn.net/wetest_tencent/article/details/51516347" target="_blank" rel="external">C++代码质量扫描主流工具深度比较</a><br><a href="https://microsoft.sharepoint.com/sites/infopedia/Media/details/aevd-3-66853" target="_blank" rel="external">Introduction to Fortify</a><br><a href="http://blog.csdn.net/whatday/article/details/54146738" target="_blank" rel="external">三款主流静态源代码安全检测工具比较</a><br><a href="http://blog.csdn.net/michaelzhaozero/article/details/42066569" target="_blank" rel="external">Jenkins+maven+git+sonar 系统持续集成&amp;代码单测管理</a><br><a href="http://hao.jobbole.com/static_code_analysis_tool_list_opensource/" target="_blank" rel="external">静态代码分析工具清单：开源篇（多语言）</a><br><a href="http://hao.jobbole.com/static_code_analysis_tool_list_opensource_lang/" target="_blank" rel="external">静态代码分析工具清单：开源篇（各语言）</a><br><a href="http://hao.jobbole.com/static_code_analysis_tool_list_opensource_enterprise/" target="_blank" rel="external">静态代码分析工具清单：公司篇</a></p>
 
     
   </div>
